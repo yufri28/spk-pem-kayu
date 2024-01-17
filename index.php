@@ -1,11 +1,11 @@
 <?php
 require_once 'config.php';
-$sql = "SELECT * FROM admin";
+$sql = "SELECT * FROM login_user WHERE level=0";
 $res = $koneksi->query($sql);
 if($res->num_rows < 1){
     $password_hash = password_hash("admin",PASSWORD_BCRYPT);
-    $sql = "INSERT INTO admin (id_admin,username,password) VALUES (0,'admin','$password_hash')";
-    $result2 = $koneksi->query($sql);
+    $sql2 = "INSERT INTO login_user (id_login,username,password,level) VALUES (null,'admin','$password_hash',0)";
+    $result2 = $koneksi->query($sql2);
 }
 // Mengambil URL yang dikirimkan melalui aturan rewriting
 $url = isset($_GET['url']) ? $_GET['url'] : '';
@@ -31,8 +31,21 @@ if (empty($urlSegments[0])) {
         header("Location: ../404.php");
         exit;
     }
-} 
-else {
+} elseif ($urlSegments[0] === 'user') {
+    // Jika URL dimulai dengan "user", arahkan ke halaman pengguna biasa
+    if (isset($urlSegments[1])) {
+        $userPage = 'user/' . $urlSegments[1] . '.php';
+        if (file_exists($userPage)) {
+            require_once $userPage;
+        } else {
+            header("Location: ../404.php");
+            exit;
+        }
+    } else {
+        header("Location: ../404.php");
+        exit;
+    }
+} else {
     // Jika URL tidak cocok dengan kondisi di atas, tampilkan halaman 404
     header("Location: 404.php");
     exit;

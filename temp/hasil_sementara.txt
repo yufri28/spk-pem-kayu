@@ -1,0 +1,246 @@
+-- Matriks Solusi Ideal Positif (A+)
+WITH A_plus_A_minus AS (
+    SELECT 
+        'A+' AS nama_alternatif,
+        NULL AS id_alternatif,
+        MAX(norm_C1) AS C1,
+        MAX(norm_C2) AS C2,
+        MAX(norm_C3) AS C3,
+        MAX(norm_C4) AS C4,
+        MAX(norm_C5) AS C5,
+        IF('cost'='cost', MIN(norm_C1),MAX(norm_C1)) AS norm_C1,
+        IF('benefit'='benefit', MAX(norm_C2),MIN(norm_C2)) AS norm_C2,
+        IF('cost'='cost', MIN(norm_C3),MAX(norm_C3)) AS norm_C3,
+        IF('benefit'='benefit', MAX(norm_C4),MIN(norm_C4)) AS norm_C4,
+        IF('benefit'='benefit', MAX(norm_C5),MIN(norm_C5)) AS norm_C5
+    FROM (
+        SELECT 
+            a.nama_alternatif,
+            a.id_alternatif,
+            MAX(C1) AS norm_C1,
+            MAX(C2) AS norm_C2,
+            MAX(C3) AS norm_C3,
+            MAX(C4) AS norm_C4,
+            MAX(C5) AS norm_C5
+        FROM (
+            SELECT 
+                a.nama_alternatif, 
+                a.id_alternatif,
+                MAX(CASE WHEN k.id_kriteria = 'C1' THEN sk.bobot_sub_kriteria END) AS C1,
+                MAX(CASE WHEN k.id_kriteria = 'C2' THEN sk.bobot_sub_kriteria END) AS C2,
+                MAX(CASE WHEN k.id_kriteria = 'C3' THEN sk.bobot_sub_kriteria END) AS C3,
+                MAX(CASE WHEN k.id_kriteria = 'C4' THEN sk.bobot_sub_kriteria END) AS C4,
+                MAX(CASE WHEN k.id_kriteria = 'C5' THEN sk.bobot_sub_kriteria END) AS C5,
+
+                (MAX(CASE WHEN k.id_kriteria = 'C1' THEN sk.bobot_sub_kriteria END)/(SELECT SQRT(SUM(POW(CASE WHEN k.id_kriteria = 'C1' THEN 	  	  sk.bobot_sub_kriteria END, 2))) FROM alternatif a
+                JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
+                JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
+                JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria) * (SELECT C1 FROM bobot_kriteria bk WHERE bk.f_id_user=2)) AS norm_C1,
+
+                (MAX(CASE WHEN k.id_kriteria = 'C2' THEN sk.bobot_sub_kriteria END)/(SELECT SQRT(SUM(POW(CASE WHEN k.id_kriteria = 'C2' THEN 	  	  sk.bobot_sub_kriteria END, 2))) FROM alternatif a
+                JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
+                JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
+                JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria)* (SELECT C2 FROM bobot_kriteria bk WHERE bk.f_id_user=2)) AS norm_C2,
+
+                (MAX(CASE WHEN k.id_kriteria = 'C3' THEN sk.bobot_sub_kriteria END)/(SELECT SQRT(SUM(POW(CASE WHEN k.id_kriteria = 'C3' THEN 	  	  sk.bobot_sub_kriteria END, 2))) FROM alternatif a
+                JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
+                JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
+                JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria)* (SELECT C3 FROM bobot_kriteria bk WHERE bk.f_id_user=2)) AS norm_C3,
+
+                (MAX(CASE WHEN k.id_kriteria = 'C4' THEN sk.bobot_sub_kriteria END)/(SELECT SQRT(SUM(POW(CASE WHEN k.id_kriteria = 'C4' THEN 	  	  sk.bobot_sub_kriteria END, 2))) FROM alternatif a
+                JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
+                JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
+                JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria)* (SELECT C4 FROM bobot_kriteria bk WHERE bk.f_id_user=2)) AS norm_C4,
+
+                (MAX(CASE WHEN k.id_kriteria = 'C5' THEN sk.bobot_sub_kriteria END)/(SELECT SQRT(SUM(POW(CASE WHEN k.id_kriteria = 'C5' THEN 	  	  sk.bobot_sub_kriteria END, 2))) FROM alternatif a
+                JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
+                JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
+                JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria)* (SELECT C5 FROM bobot_kriteria bk WHERE bk.f_id_user=2)) AS norm_C5
+
+            FROM alternatif a
+            JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
+            JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
+            JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria
+            GROUP BY a.nama_alternatif, a.id_alternatif
+        ) AS a
+        GROUP BY a.nama_alternatif, a.id_alternatif
+    ) AS t
+),
+
+-- Matriks Solusi Ideal Negatif (A-)
+A_minus AS (
+    SELECT 
+        'A-' AS nama_alternatif,
+        NULL AS id_alternatif,
+        MIN(norm_C1) AS C1,
+        MIN(norm_C2) AS C2,
+        MIN(norm_C3) AS C3,
+        MIN(norm_C4) AS C4,
+        MIN(norm_C5) AS C5,
+        IF('cost'='cost', MAX(norm_C1), MIN(norm_C1)) AS norm_C1,
+        IF('benefit'='benefit', MIN(norm_C2), MAX(norm_C2)) AS norm_C2,
+        IF('cost'='cost', MAX(norm_C3), MIN(norm_C3)) AS norm_C3,
+        IF('benefit'='benefit', MIN(norm_C4), MAX(norm_C4)) AS norm_C4,
+        IF('benefit'='benefit', MIN(norm_C5), MAX(norm_C5)) AS norm_C5
+    FROM (
+        SELECT 
+            a.nama_alternatif,
+            a.id_alternatif,
+            MIN(C1) AS norm_C1,
+            MIN(C2) AS norm_C2,
+            MIN(C3) AS norm_C3,
+            MIN(C4) AS norm_C4,
+            MIN(C5) AS norm_C5
+        FROM (
+           SELECT 
+    a.nama_alternatif, 
+    a.id_alternatif,
+    MAX(CASE WHEN k.id_kriteria = 'C1' THEN sk.bobot_sub_kriteria END) AS C1,
+    MAX(CASE WHEN k.id_kriteria = 'C2' THEN sk.bobot_sub_kriteria END) AS C2,
+    MAX(CASE WHEN k.id_kriteria = 'C3' THEN sk.bobot_sub_kriteria END) AS C3,
+    MAX(CASE WHEN k.id_kriteria = 'C4' THEN sk.bobot_sub_kriteria END) AS C4,
+    MAX(CASE WHEN k.id_kriteria = 'C5' THEN sk.bobot_sub_kriteria END) AS C5,
+    
+    (MAX(CASE WHEN k.id_kriteria = 'C1' THEN sk.bobot_sub_kriteria END)/(SELECT SQRT(SUM(POW(CASE WHEN k.id_kriteria = 'C1' THEN 	  	  sk.bobot_sub_kriteria END, 2))) FROM alternatif a
+    JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
+    JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
+    JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria) * (SELECT C1 FROM bobot_kriteria bk WHERE bk.f_id_user=2)) AS norm_C1,
+    
+    (MAX(CASE WHEN k.id_kriteria = 'C2' THEN sk.bobot_sub_kriteria END)/(SELECT SQRT(SUM(POW(CASE WHEN k.id_kriteria = 'C2' THEN 	  	  sk.bobot_sub_kriteria END, 2))) FROM alternatif a
+    JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
+    JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
+    JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria)* (SELECT C2 FROM bobot_kriteria bk WHERE bk.f_id_user=2)) AS norm_C2,
+    
+    (MAX(CASE WHEN k.id_kriteria = 'C3' THEN sk.bobot_sub_kriteria END)/(SELECT SQRT(SUM(POW(CASE WHEN k.id_kriteria = 'C3' THEN 	  	  sk.bobot_sub_kriteria END, 2))) FROM alternatif a
+    JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
+    JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
+    JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria)* (SELECT C3 FROM bobot_kriteria bk WHERE bk.f_id_user=2)) AS norm_C3,
+    
+    (MAX(CASE WHEN k.id_kriteria = 'C4' THEN sk.bobot_sub_kriteria END)/(SELECT SQRT(SUM(POW(CASE WHEN k.id_kriteria = 'C4' THEN 	  	  sk.bobot_sub_kriteria END, 2))) FROM alternatif a
+    JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
+    JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
+    JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria)* (SELECT C4 FROM bobot_kriteria bk WHERE bk.f_id_user=2)) AS norm_C4,
+    
+    (MAX(CASE WHEN k.id_kriteria = 'C5' THEN sk.bobot_sub_kriteria END)/(SELECT SQRT(SUM(POW(CASE WHEN k.id_kriteria = 'C5' THEN 	  	  sk.bobot_sub_kriteria END, 2))) FROM alternatif a
+    JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
+    JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
+    JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria)* (SELECT C5 FROM bobot_kriteria bk WHERE bk.f_id_user=2)) AS norm_C5
+    
+FROM alternatif a
+JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
+JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
+JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria
+GROUP BY a.nama_alternatif, a.id_alternatif
+        ) AS a
+        GROUP BY a.nama_alternatif, a.id_alternatif
+    ) AS t
+),
+
+-- Menghitung jarak D+ dan D- dari setiap alternatif ke A+ dan A-
+D_plus_D_minus AS (
+    SELECT 
+        a.nama_alternatif,
+        a.id_alternatif,
+        C1,
+        C2,
+        C3,
+        C4,
+        C5,
+        norm_C1,
+        norm_C2,
+        norm_C3,
+        norm_C4,
+        norm_C5,
+        SQRT(POW(C1 - (SELECT C1 FROM A_plus_A_minus), 2) + 
+             POW(C2 - (SELECT C2 FROM A_plus_A_minus), 2) + 
+             POW(C3 - (SELECT C3 FROM A_plus_A_minus), 2) + 
+             POW(C4 - (SELECT C4 FROM A_plus_A_minus), 2) + 
+             POW(C5 - (SELECT C5 FROM A_plus_A_minus), 2)) AS D_plus,
+        SQRT(POW(C1 - (SELECT C1 FROM A_minus), 2) + 
+             POW(C2 - (SELECT C2 FROM A_minus), 2) + 
+             POW(C3 - (SELECT C3 FROM A_minus), 2) + 
+             POW(C4 - (SELECT C4 FROM A_minus), 2) + 
+             POW(C5 - (SELECT C5 FROM A_minus), 2)) AS D_minus
+    FROM (
+        SELECT 
+    a.nama_alternatif, 
+    a.id_alternatif,
+    MAX(CASE WHEN k.id_kriteria = 'C1' THEN sk.bobot_sub_kriteria END) AS C1,
+    MAX(CASE WHEN k.id_kriteria = 'C2' THEN sk.bobot_sub_kriteria END) AS C2,
+    MAX(CASE WHEN k.id_kriteria = 'C3' THEN sk.bobot_sub_kriteria END) AS C3,
+    MAX(CASE WHEN k.id_kriteria = 'C4' THEN sk.bobot_sub_kriteria END) AS C4,
+    MAX(CASE WHEN k.id_kriteria = 'C5' THEN sk.bobot_sub_kriteria END) AS C5,
+    
+    (MAX(CASE WHEN k.id_kriteria = 'C1' THEN sk.bobot_sub_kriteria END)/(SELECT SQRT(SUM(POW(CASE WHEN k.id_kriteria = 'C1' THEN 	  	  sk.bobot_sub_kriteria END, 2))) FROM alternatif a
+    JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
+    JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
+    JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria) * (SELECT C1 FROM bobot_kriteria bk WHERE bk.f_id_user=2)) AS norm_C1,
+    
+    (MAX(CASE WHEN k.id_kriteria = 'C2' THEN sk.bobot_sub_kriteria END)/(SELECT SQRT(SUM(POW(CASE WHEN k.id_kriteria = 'C2' THEN 	  	  sk.bobot_sub_kriteria END, 2))) FROM alternatif a
+    JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
+    JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
+    JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria)* (SELECT C2 FROM bobot_kriteria bk WHERE bk.f_id_user=2)) AS norm_C2,
+    
+    (MAX(CASE WHEN k.id_kriteria = 'C3' THEN sk.bobot_sub_kriteria END)/(SELECT SQRT(SUM(POW(CASE WHEN k.id_kriteria = 'C3' THEN 	  	  sk.bobot_sub_kriteria END, 2))) FROM alternatif a
+    JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
+    JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
+    JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria)* (SELECT C3 FROM bobot_kriteria bk WHERE bk.f_id_user=2)) AS norm_C3,
+    
+    (MAX(CASE WHEN k.id_kriteria = 'C4' THEN sk.bobot_sub_kriteria END)/(SELECT SQRT(SUM(POW(CASE WHEN k.id_kriteria = 'C4' THEN 	  	  sk.bobot_sub_kriteria END, 2))) FROM alternatif a
+    JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
+    JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
+    JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria)* (SELECT C4 FROM bobot_kriteria bk WHERE bk.f_id_user=2)) AS norm_C4,
+    
+    (MAX(CASE WHEN k.id_kriteria = 'C5' THEN sk.bobot_sub_kriteria END)/(SELECT SQRT(SUM(POW(CASE WHEN k.id_kriteria = 'C5' THEN 	  	  sk.bobot_sub_kriteria END, 2))) FROM alternatif a
+    JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
+    JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
+    JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria)* (SELECT C5 FROM bobot_kriteria bk WHERE bk.f_id_user=2)) AS norm_C5
+    
+FROM alternatif a
+JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
+JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
+JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria
+GROUP BY a.nama_alternatif, a.id_alternatif
+    ) AS a
+),
+
+-- Menghitung nilai closeness coefficient (CC) untuk setiap alternatif
+CC AS (
+    SELECT 
+        nama_alternatif,
+        id_alternatif,
+        C1,
+        C2,
+        C3,
+        C4,
+        C5,
+        norm_C1,
+        norm_C2,
+        norm_C3,
+        norm_C4,
+        norm_C5,
+        D_plus,
+        D_minus,
+        D_minus / (D_plus + D_minus) AS closeness_coefficient
+    FROM D_plus_D_minus
+)
+
+-- Menghitung peringkat (ranking) untuk setiap alternatif berdasarkan nilai CC
+SELECT 
+    nama_alternatif,
+    id_alternatif,
+    C1,
+    C2,
+    C3,
+    C4,
+    C5,
+    norm_C1,
+    norm_C2,
+    norm_C3,
+    norm_C4,
+    norm_C5,
+    D_plus,
+    D_minus,
+    closeness_coefficient,
+    RANK() OVER (ORDER BY closeness_coefficient DESC) AS ranking
+FROM CC;
