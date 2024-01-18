@@ -1,6 +1,7 @@
-<?php 
+<?php
 require_once '../config.php';
-class Sub_Kriteria{
+class Sub_Kriteria
+{
 
     private $db;
 
@@ -35,12 +36,12 @@ class Sub_Kriteria{
     }
     public function tambahSubKriteria($dataSubKiteria)
     {
-        $cekData = $this->db->query("SELECT * FROM `sub_kriteria` WHERE LOWER(nama_sub_kriteria) = '".strtolower($dataSubKiteria['nama_sub_kriteria'])."'");
+        $cekData = $this->db->query("SELECT * FROM `sub_kriteria` WHERE LOWER(nama_sub_kriteria) = '" . strtolower($dataSubKiteria['nama_sub_kriteria']) . "'");
         if ($cekData->num_rows > 0) {
             return $_SESSION['error'] = 'Data sudah ada!';
         } else {
-            $stmtInsertSub = $this->db->prepare("INSERT INTO sub_kriteria(nama_sub_kriteria,spesifikasi,bobot_sub_kriteria,f_id_kriteria) VALUES (?,?,?,?)");
-            $stmtInsertSub->bind_param("ssis", $dataSubKiteria['nama_sub_kriteria'], $dataSubKiteria['spesifikasi'], $dataSubKiteria['bobot_sub_kriteria'], $dataSubKiteria['id_kriteria']);
+            $stmtInsertSub = $this->db->prepare("INSERT INTO sub_kriteria(nama_sub_kriteria,bobot_sub_kriteria,f_id_kriteria) VALUES (?,?,?)");
+            $stmtInsertSub->bind_param("sis", $dataSubKiteria['nama_sub_kriteria'], $dataSubKiteria['bobot_sub_kriteria'], $dataSubKiteria['id_kriteria']);
             $stmtInsertSub->execute();
             if ($stmtInsertSub->affected_rows > 0) {
                 return $_SESSION['success'] = 'Data berhasil disimpan!';
@@ -52,8 +53,8 @@ class Sub_Kriteria{
     }
     public function editSubKriteria($dataSubKiteria)
     {
-        $stmtUpdateSub = $this->db->prepare("UPDATE sub_kriteria  SET nama_sub_kriteria=?,spesifikasi=?,bobot_sub_kriteria=?,f_id_kriteria=? WHERE id_sub_kriteria=?");
-        $stmtUpdateSub->bind_param("ssisi", $dataSubKiteria['nama_sub_kriteria'],$dataSubKiteria['spesifikasi'],$dataSubKiteria['bobot_sub_kriteria'],$dataSubKiteria['id_kriteria'],$dataSubKiteria['id_sub_kriteria']);
+        $stmtUpdateSub = $this->db->prepare("UPDATE sub_kriteria  SET nama_sub_kriteria=?,bobot_sub_kriteria=?,f_id_kriteria=? WHERE id_sub_kriteria=?");
+        $stmtUpdateSub->bind_param("sisi", $dataSubKiteria['nama_sub_kriteria'], $dataSubKiteria['bobot_sub_kriteria'], $dataSubKiteria['id_kriteria'], $dataSubKiteria['id_sub_kriteria']);
         $stmtUpdateSub->execute();
         if ($stmtUpdateSub) {
             return $_SESSION['success'] = 'Data berhasil diedit!';
@@ -65,20 +66,16 @@ class Sub_Kriteria{
     public function hapusSubKriteria($idSubKriteria)
     {
         $stmtDelete = $this->db->prepare("DELETE FROM sub_kriteria WHERE id_sub_kriteria=?");
-        $stmtDelete->bind_param("i",$idSubKriteria);
+        $stmtDelete->bind_param("i", $idSubKriteria);
         $stmtDelete->execute();
         if ($stmtDelete->affected_rows > 0) {
             return $_SESSION['success'] = 'Data berhasil dihapus!';
-        } else{
+        } else {
             return $_SESSION['error'] = 'Terjadi kesalahan dalam menghapus data.';
         }
         $stmtDelete->close();
-        
     }
 }
 
 
 $Sub_Kriteria = new Sub_Kriteria();
-
-
-?>
