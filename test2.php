@@ -1,11 +1,5 @@
 <?php
- 
- if(isset($_POST['vol'])){
- 
- $vol = $_POST['vol'];
-
-	echo $vol;
-}
+require_once './config.php';
 ?>
 
 <!DOCTYPE html>
@@ -23,9 +17,9 @@
     </form>
 
     <script>
-    function updateWeight(value) {
-        document.getElementById('weightDisplay').textContent = 'Bobot: ' + value;
-    }
+        function updateWeight(value) {
+            document.getElementById('weightDisplay').textContent = 'Bobot: ' + value;
+        }
     </script>
 
 </body>

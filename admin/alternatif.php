@@ -7,11 +7,11 @@ require_once './classes/alternatif.php';
 require_once './classes/sub_kriteria.php';
 
 $dataAlternatif = $getDataAlternatif->getDataAlternatif();
-$dataSifatMekanik = $Sub_Kriteria->getSubKriteriaSifatMekanik();
-$dataSubFisik = $Sub_Kriteria->getSubKriteriaFisik();
-$dataSubKelasKeawetan = $Sub_Kriteria->getSubKriteriaKelasKeawetan();
-$dataSubUmurKayu = $Sub_Kriteria->getSubKriteriaUmurKayu();
-$dataSubHargaKayu = $Sub_Kriteria->getSubKriteriaHargaKayu();
+$dataSifatMekanik = $getDataAlternatif->getSubKriteriaSifatMekanik();
+$dataSubFisik = $getDataAlternatif->getSubKriteriaFisik();
+$dataSubKelasKeawetan = $getDataAlternatif->getSubKriteriaKelasKeawetan();
+$dataSubUmurKayu = $getDataAlternatif->getSubKriteriaUmurKayu();
+$dataSubHargaKayu = $getDataAlternatif->getSubKriteriaHargaKayu();
 
 $teks = "";
 $biayaId = 0;
@@ -387,10 +387,10 @@ if (isset($_POST['hapus'])) {
     }
 }
 
-$getSubBiaya = $getDataAlternatif->getSubBiaya();
-$getSubFasilitas = $getDataAlternatif->getSubFasilitas();
-$getSubPusatKota = $getDataAlternatif->getSubPusatKota();
-$getSubJumlahPengunjung = $getDataAlternatif->getSubJumlahPengunjung();
+// $getSubBiaya = $getDataAlternatif->getSubBiaya();
+// $getSubFasilitas = $getDataAlternatif->getSubFasilitas();
+// $getSubPusatKota = $getDataAlternatif->getSubPusatKota();
+// $getSubJumlahPengunjung = $getDataAlternatif->getSubJumlahPengunjung();
 ?>
 <?php if (isset($_SESSION['success'])) : ?>
     <script>
@@ -425,7 +425,7 @@ $getSubJumlahPengunjung = $getDataAlternatif->getSubJumlahPengunjung();
     <?php unset($_SESSION['error']); // Menghapus session setelah ditampilkan 
     ?>
 <?php endif; ?>
-<div class="container" style="font-family: 'Prompt', sans-serif">
+<div class="container" style="font-family: 'Prompt', sans-serif; height: 100vh;">
     <div class="row">
         <div class="d-xxl-flex">
             <div class="col-xxl-3 mb-xxl-3 mt-5">
@@ -478,14 +478,11 @@ $getSubJumlahPengunjung = $getDataAlternatif->getSubJumlahPengunjung();
                                         <th scope="col">No</th>
                                         <th scope="col">Gambar</th>
                                         <th scope="col">Nama Alternatif</th>
-                                        <th scope="col">Latitude</th>
-                                        <th scope="col">Longitude</th>
-                                        <th scope="col">Alamat</th>
-                                        <th scope="col">Kategori</th>
-                                        <th scope="col">Biaya masuk</th>
-                                        <th scope="col">Fasilitas</th>
-                                        <th scope="col">Jarak dari pusat kota</th>
-                                        <th scope="col">Jumlah pengunjung</th>
+                                        <th scope="col">Sifat Mekanik</th>
+                                        <th scope="col">Sifat Fisik</th>
+                                        <th scope="col">Kelas Keawetan</th>
+                                        <th scope="col">Umur</th>
+                                        <th scope="col">Harga</th>
                                         <th scope="col">Aksi</th>
                                     </tr>
                                 </thead>
@@ -496,22 +493,15 @@ $getSubJumlahPengunjung = $getDataAlternatif->getSubJumlahPengunjung();
                                             <td><a href="../user_area/gambar/<?= $alternatif['gambar'] == '-' ? 'no-img.png' : $alternatif['gambar']; ?>" data-lightbox="image-1" data-title="<?= $alternatif['nama_alternatif']; ?>"><img style="width:100px; height:100px;" src="../user_area/gambar/<?= $alternatif['gambar'] == '-' ? 'no-img.png' : $alternatif['gambar']; ?>" alt=""></a>
                                             </td>
                                             <td><?= $alternatif['nama_alternatif']; ?></td>
-                                            <td><?= $alternatif['latitude']; ?></td>
-                                            <td><?= $alternatif['longitude']; ?></td>
-                                            <td><?= $alternatif['alamat']; ?></td>
-                                            <td><?= $alternatif['kategori']; ?></td>
-                                            <td><?= $alternatif['biaya_alt']; ?></td>
-                                            <td><?= $alternatif['fasilitas_alt'] != '' ? $alternatif['fasilitas_alt'] : '-'; ?>
-                                            </td>
-                                            <td><?= $alternatif['jarak_alt']; ?> KM</td>
-                                            <td><?= $alternatif['jumlah_peng_alt']; ?> Orang</td>
+                                            <td><?= $alternatif['nama_C1']; ?></td>
+                                            <td><?= $alternatif['nama_C2']; ?></td>
+                                            <td><?= $alternatif['nama_C3']; ?></td>
+                                            <td><?= $alternatif['umur']; ?></td>
+                                            <td><?= $alternatif['harga']; ?></td>
                                             <td>
-
                                                 <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#edit<?= $alternatif['id_alternatif']; ?>">
                                                     Edit
                                                 </button>
-                                                <a href="https://www.google.com/maps/dir/?api=1&destination=<?= $alternatif['latitude']; ?>,<?= $alternatif['longitude']; ?>" title="Lokasi di MAPS" target="_blank" class="btn btn-sm btn-success">ke
-                                                    Maps</a>
                                                 <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#hapus<?= $alternatif['id_alternatif']; ?>">
                                                     Hapus
                                                 </button>
