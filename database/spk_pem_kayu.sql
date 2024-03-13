@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 18 Jan 2024 pada 08.23
+-- Waktu pembuatan: 13 Mar 2024 pada 08.54
 -- Versi server: 10.4.14-MariaDB
 -- Versi PHP: 7.2.34
 
@@ -30,17 +30,17 @@ SET time_zone = "+00:00";
 CREATE TABLE `alternatif` (
   `id_alternatif` int(5) NOT NULL,
   `nama_alternatif` varchar(255) NOT NULL,
-  `alamat` text NOT NULL,
-  `gambar` varchar(255) NOT NULL,
-  `latitude` varchar(255) NOT NULL,
-  `longitude` varchar(255) NOT NULL,
-  `rating` int(1) NOT NULL,
-  `kategori` enum('Budaya','Buatan','Alam') NOT NULL,
-  `biaya_alt` int(11) NOT NULL,
-  `fasilitas_alt` text NOT NULL,
-  `jarak_alt` decimal(10,2) NOT NULL,
-  `jumlah_peng_alt` int(11) NOT NULL
+  `umur` int(11) NOT NULL,
+  `harga` int(11) NOT NULL,
+  `gambar` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `alternatif`
+--
+
+INSERT INTO `alternatif` (`id_alternatif`, `nama_alternatif`, `umur`, `harga`, `gambar`) VALUES
+(37, 'Fatunausus', 70, 7000000, 'ff3f1bcac87939f48ab3b7bbe11df7ec.png');
 
 -- --------------------------------------------------------
 
@@ -54,6 +54,16 @@ CREATE TABLE `kecocokan_alt_kriteria` (
   `f_id_kriteria` char(2) NOT NULL,
   `f_id_sub_kriteria` int(5) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `kecocokan_alt_kriteria`
+--
+
+INSERT INTO `kecocokan_alt_kriteria` (`id_alt_kriteria`, `f_id_alternatif`, `f_id_kriteria`, `f_id_sub_kriteria`) VALUES
+(148, 37, 'C1', 31),
+(149, 37, 'C2', 36),
+(150, 37, 'C3', 40),
+(151, 37, 'C4', 45);
 
 -- --------------------------------------------------------
 
@@ -73,10 +83,9 @@ CREATE TABLE `kriteria` (
 
 INSERT INTO `kriteria` (`id_kriteria`, `nama_kriteria`, `keterangan`) VALUES
 ('C1', 'Sifat Mekanik', 'benefit'),
-('C2', 'Sifat Fisik', 'benefit'),
-('C3', 'Kelas Keawetan', 'benefit'),
-('C4', 'Umur Kayu', 'benefit'),
-('C5', 'Harga Kayu', 'benefit');
+('C2', 'Kelas Keawetan', 'benefit'),
+('C3', 'Umur Kayu', 'benefit'),
+('C4', 'Harga Kayu', 'benefit');
 
 -- --------------------------------------------------------
 
@@ -107,7 +116,6 @@ INSERT INTO `login_user` (`id_login`, `username`, `password`, `level`) VALUES
 CREATE TABLE `sub_kriteria` (
   `id_sub_kriteria` int(5) NOT NULL,
   `nama_sub_kriteria` varchar(25) NOT NULL,
-  `spesifikasi` text NOT NULL,
   `bobot_sub_kriteria` int(5) NOT NULL,
   `f_id_kriteria` char(2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -116,27 +124,27 @@ CREATE TABLE `sub_kriteria` (
 -- Dumping data untuk tabel `sub_kriteria`
 --
 
-INSERT INTO `sub_kriteria` (`id_sub_kriteria`, `nama_sub_kriteria`, `spesifikasi`, `bobot_sub_kriteria`, `f_id_kriteria`) VALUES
-(1, 'Sangat murah', 'Rp. 0 - 3.000', 5, 'C1'),
-(2, 'Murah', 'Rp. &gt;3.000 - 6.000', 4, 'C1'),
-(3, 'Sedang', 'Rp. &gt;6.000 - 9.000', 3, 'C1'),
-(4, 'Mahal', 'Rp. &gt;9.000 - 12.000', 2, 'C1'),
-(5, 'Sangat mahal', '&gt; Rp.12.000 - 15.000', 1, 'C1'),
-(6, 'Sangat lengkap', 'Jika memenuhi 5 item dari fasilitas berikut ini: Kamar mandi, tempat parkir, area food court, tempat sampah, gazebo.', 5, 'C2'),
-(7, 'Lengkap', 'Jika memenuhi 4 item dari fasilitas berikut ini: Kamar mandi, tempat parkir, area food court, tempat sampah, gazebo.', 4, 'C2'),
-(8, 'Cukup lengkap', 'Jika memenuhi 3 item dari fasilitas berikut ini: Kamar mandi, tempat parkir, area food court, tempat sampah, gazebo. ', 3, 'C2'),
-(9, 'Kurang lengkap', 'Jika memenuhi 2 item dari fasilitas berikut ini: Kamar mandi, tempat parkir, area food court, tempat sampah, gazebo.', 2, 'C2'),
-(10, 'Tidak lengkap', 'Jika memenuhi 1 item dari fasilitas berikut ini: Kamar mandi, tempat parkir, area food court, tempat sampah, gazebo.', 1, 'C2'),
-(11, 'Sangat dekat', '0 - 30 Km', 5, 'C3'),
-(12, 'Dekat', '&gt; 30 - 60 Km', 4, 'C3'),
-(13, 'Sedang', '&gt; 60 - 90 Km', 3, 'C3'),
-(14, 'Jauh', '&gt; 90 - 120 Km', 2, 'C3'),
-(15, 'Sangat jauh', '&gt; 120 - 150 Km', 1, 'C3'),
-(16, 'Sangat banyak', '>100 Orang', 5, 'C4'),
-(17, 'Banyak', '76-100 Orang', 4, 'C4'),
-(18, 'Sedang', '51-75 Orang', 3, 'C4'),
-(19, 'Sedikit', '26-50 Orang', 2, 'C4'),
-(20, 'Sangat sedikit', '', 1, 'C4');
+INSERT INTO `sub_kriteria` (`id_sub_kriteria`, `nama_sub_kriteria`, `bobot_sub_kriteria`, `f_id_kriteria`) VALUES
+(30, 'Kekuatan Tarik', 5, 'C1'),
+(31, 'Kekuatan Tekan', 4, 'C1'),
+(32, 'Kekuatan Lentur', 3, 'C1'),
+(33, 'Kekuatan Lengkung', 2, 'C1'),
+(34, 'Kekuatan Impak', 1, 'C1'),
+(35, 'Sangat Tahan (kelas I)', 5, 'C2'),
+(36, 'Tahan (kelas II)', 4, 'C2'),
+(37, 'Sedang (kelas III)', 3, 'C2'),
+(38, 'Tidak Tahan (kelas IV)', 2, 'C2'),
+(39, 'Sangat Tidak Tahan (V)', 1, 'C2'),
+(40, '&gt;= 60 Tahun', 5, 'C3'),
+(41, '40 - 60 Tahun', 4, 'C3'),
+(42, '30 - 40 Tahun', 3, 'C3'),
+(43, '25 - 30 Tahun', 2, 'C3'),
+(44, '&lt;= 15 - 25 Tahun', 1, 'C3'),
+(45, '&gt;= 5 Juta', 5, 'C4'),
+(46, '3,5 - 5 Juta', 4, 'C4'),
+(47, '2 - 3,5 Juta', 3, 'C4'),
+(48, '600 - 2 Juta', 2, 'C4'),
+(49, '&lt;= 350 - 600 ribu', 1, 'C4');
 
 --
 -- Indexes for dumped tables
@@ -184,13 +192,13 @@ ALTER TABLE `sub_kriteria`
 -- AUTO_INCREMENT untuk tabel `alternatif`
 --
 ALTER TABLE `alternatif`
-  MODIFY `id_alternatif` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id_alternatif` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT untuk tabel `kecocokan_alt_kriteria`
 --
 ALTER TABLE `kecocokan_alt_kriteria`
-  MODIFY `id_alt_kriteria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=144;
+  MODIFY `id_alt_kriteria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=152;
 
 --
 -- AUTO_INCREMENT untuk tabel `login_user`
@@ -202,7 +210,7 @@ ALTER TABLE `login_user`
 -- AUTO_INCREMENT untuk tabel `sub_kriteria`
 --
 ALTER TABLE `sub_kriteria`
-  MODIFY `id_sub_kriteria` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id_sub_kriteria` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)

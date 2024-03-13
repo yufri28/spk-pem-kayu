@@ -60,7 +60,7 @@ $data_Kriteria = $Kriteria->getKriteria();
     ?>
 <?php endif; ?>
 
-<div class="container pt-5" style="font-family: 'Prompt', sans-serif; margin-bottom:130px;">
+<div class="container pt-5" style="font-family: 'Prompt', sans-serif; margin-bottom:130px; height: 100vh;">
     <div class="row">
         <div class="d-xxl-flex">
             <?php if (mysqli_num_rows($data_Kriteria) < 5) : ?>

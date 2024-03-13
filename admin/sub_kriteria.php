@@ -63,7 +63,7 @@ $data_Kriteria = $Sub_Kriteria->getKriteria();
     ?>
 <?php endif; ?>
 
-<div class="container mb-5 pb-5" style="font-family: 'Prompt', sans-serif">
+<div class="container mb-5 pb-5" style="font-family: 'Prompt', sans-serif; height: 100vh;">
     <div class="row">
         <div class="d-xxl-flex">
             <div class="col-xxl-3 mb-xxl-3 mt-5">

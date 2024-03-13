@@ -12,25 +12,25 @@ class Sub_Kriteria
 
     public function getSubKriteria()
     {
-        return $this->db->query("SELECT sk.id_sub_kriteria,sk.nama_sub_kriteria,sk.bobot_sub_kriteria,sk.spesifikasi,k.id_kriteria,k.nama_kriteria FROM sub_kriteria sk JOIN kriteria k ON sk.f_id_kriteria = k.id_kriteria ORDER BY sk.id_sub_kriteria DESC");
+        return $this->db->query("SELECT sk.id_sub_kriteria,sk.nama_sub_kriteria,sk.bobot_sub_kriteria,k.id_kriteria,k.nama_kriteria FROM sub_kriteria sk JOIN kriteria k ON sk.f_id_kriteria = k.id_kriteria ORDER BY sk.id_sub_kriteria DESC");
     }
     public function getKriteria()
     {
         return $this->db->query("SELECT * FROM `kriteria`");
     }
-    public function getSubKriteriaBiaya()
+    public function getSubKriteriaSifatMekanik()
     {
         return $this->db->query("SELECT * FROM `sub_kriteria` WHERE f_id_kriteria='C1'");
     }
-    public function getSubKriteriaFas()
+    public function getSubKriteriaKelasKeawetan()
     {
         return $this->db->query("SELECT * FROM `sub_kriteria` WHERE f_id_kriteria='C2'");
     }
-    public function getSubKriteriaJarak()
+    public function getSubKriteriaUmurKayu()
     {
         return $this->db->query("SELECT * FROM `sub_kriteria` WHERE f_id_kriteria='C3'");
     }
-    public function getSubKriteriaPeng()
+    public function getSubKriteriaHargaKayu()
     {
         return $this->db->query("SELECT * FROM `sub_kriteria` WHERE f_id_kriteria='C4'");
     }

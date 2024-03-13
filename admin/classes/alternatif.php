@@ -19,17 +19,14 @@ class Alternatif
                 MIN(CASE WHEN k.id_kriteria = 'C2' THEN kak.id_alt_kriteria END) AS id_alt_C2,
                 MIN(CASE WHEN k.id_kriteria = 'C3' THEN kak.id_alt_kriteria END) AS id_alt_C3,
                 MAX(CASE WHEN k.id_kriteria = 'C4' THEN kak.id_alt_kriteria END) AS id_alt_C4,
-                MAX(CASE WHEN k.id_kriteria = 'C5' THEN kak.id_alt_kriteria END) AS id_alt_C5,
                 MAX(CASE WHEN k.id_kriteria = 'C1' THEN kak.f_id_sub_kriteria END) AS id_sub_C1,
                 MIN(CASE WHEN k.id_kriteria = 'C2' THEN kak.f_id_sub_kriteria END) AS id_sub_C2,
                 MIN(CASE WHEN k.id_kriteria = 'C3' THEN kak.f_id_sub_kriteria END) AS id_sub_C3,
                 MAX(CASE WHEN k.id_kriteria = 'C4' THEN kak.f_id_sub_kriteria END) AS id_sub_C4,
-                MAX(CASE WHEN k.id_kriteria = 'C5' THEN kak.f_id_sub_kriteria END) AS id_sub_C5,
                 MAX(CASE WHEN k.id_kriteria = 'C1' THEN sk.nama_sub_kriteria END) AS nama_C1,
                 MIN(CASE WHEN k.id_kriteria = 'C2' THEN sk.nama_sub_kriteria END) AS nama_C2,
                 MIN(CASE WHEN k.id_kriteria = 'C3' THEN sk.nama_sub_kriteria END) AS nama_C3,
-                MAX(CASE WHEN k.id_kriteria = 'C4' THEN sk.nama_sub_kriteria END) AS nama_C4,
-                MAX(CASE WHEN k.id_kriteria = 'C5' THEN sk.nama_sub_kriteria END) AS nama_C5
+                MAX(CASE WHEN k.id_kriteria = 'C4' THEN sk.nama_sub_kriteria END) AS nama_C4
                 FROM alternatif a
                 JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
                 JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
@@ -43,8 +40,8 @@ class Alternatif
         if ($cekData->num_rows > 0) {
             return $_SESSION['error'] = 'Data sudah ada!';
         } else {
-            $stmtInsertAlt = $this->db->prepare("INSERT INTO alternatif(nama_alternatif, alamat, gambar, latitude, longitude, rating, kategori, biaya_alt, fasilitas_alt, jarak_alt, jumlah_peng_alt) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
-            $stmtInsertAlt->bind_param("sssssisisii", $dataAlternatif['nama_alternatif'], $dataAlternatif['alamat'], $dataAlternatif['gambar'], $dataAlternatif['latitude'], $dataAlternatif['longitude'], $dataAlternatif['rating'], $dataAlternatif['kategori'], $dataAlternatif['biaya_alt'], $dataAlternatif['fasilitas_alt'], $dataAlternatif['jarak_alt'], $dataAlternatif['jumlah_peng_alt']);
+            $stmtInsertAlt = $this->db->prepare("INSERT INTO alternatif(nama_alternatif, umur, harga, gambar) VALUES (?,?,?,?)");
+            $stmtInsertAlt->bind_param("siis", $dataAlternatif['nama_alternatif'], $dataAlternatif['umur'], $dataAlternatif['harga'], $dataAlternatif['gambar']);
             $stmtInsertAlt->execute();
             $getId = $this->db->query("SELECT id_alternatif FROM `alternatif` WHERE nama_alternatif = '" . $dataAlternatif['nama_alternatif'] . "'");
             $fetchId = mysqli_fetch_assoc($getId);
@@ -67,7 +64,7 @@ class Alternatif
         // $stmtUpdateAlt = $this->db->prepare("UPDATE alternatif SET nama_alternatif=?, alamat=?, latitude=?, longitude=? WHERE id_alternatif=?");
         // $stmtUpdateAlt->bind_param("ssssi", $dataAlternatif['nama_alternatif'], $dataAlternatif['alamat'], $dataAlternatif['latitude'], $dataAlternatif['longitude'], $dataAlternatif['id_alternatif']);
         // $stmtUpdateAlt->execute();
-        $query = "UPDATE alternatif SET nama_alternatif='" . $dataAlternatif['nama_alternatif'] . "', alamat='" . $dataAlternatif['alamat'] . "' , gambar='" . $dataAlternatif['gambar'] . "', latitude='" . $dataAlternatif['latitude'] . "', longitude='" . $dataAlternatif['longitude'] . "', rating='" . $dataAlternatif['rating'] . "', kategori='" . $dataAlternatif['kategori'] . "', biaya_alt='" . $dataAlternatif['biaya_alt'] . "', fasilitas_alt='" . $dataAlternatif['fasilitas_alt'] . "', jarak_alt='" . $dataAlternatif['jarak_alt'] . "', jumlah_peng_alt='" . $dataAlternatif['jumlah_peng_alt'] . "' WHERE id_alternatif=" . $dataAlternatif['id_alternatif'];
+        $query = "UPDATE alternatif SET nama_alternatif='" . $dataAlternatif['nama_alternatif'] . "', umur='" . $dataAlternatif['umur'] . "' , harga='" . $dataAlternatif['harga'] . "', gambar='" . $dataAlternatif['gambar'] . "' WHERE id_alternatif=" . $dataAlternatif['id_alternatif'];
         $stmtUpdateAlt = $this->db->query($query);
 
         if ($stmtUpdateAlt) {
@@ -112,25 +109,21 @@ class Alternatif
 
     public function getSubKriteriaSifatMekanik()
     {
-        return $this->db->query("SELECT id_sub_kriteria, nama_sub_kriteria, spesifikasi FROM sub_kriteria WHERE f_id_kriteria = 'C1'");
-    }
-    public function getSubKriteriaFisik()
-    {
-        return $this->db->query("SELECT id_sub_kriteria, nama_sub_kriteria, spesifikasi FROM sub_kriteria WHERE f_id_kriteria = 'C2'");
+        return $this->db->query("SELECT id_sub_kriteria, nama_sub_kriteria, bobot_sub_kriteria FROM sub_kriteria WHERE f_id_kriteria = 'C1'");
     }
 
     public function getSubKriteriaKelasKeawetan()
     {
-        return $this->db->query("SELECT id_sub_kriteria, nama_sub_kriteria, spesifikasi FROM sub_kriteria WHERE f_id_kriteria = 'C3'");
+        return $this->db->query("SELECT id_sub_kriteria, nama_sub_kriteria, bobot_sub_kriteria FROM sub_kriteria WHERE f_id_kriteria = 'C2'");
     }
 
     public function getSubKriteriaUmurKayu()
     {
-        return $this->db->query("SELECT id_sub_kriteria, nama_sub_kriteria, spesifikasi FROM sub_kriteria WHERE f_id_kriteria = 'C4'");
+        return $this->db->query("SELECT id_sub_kriteria, nama_sub_kriteria, bobot_sub_kriteria FROM sub_kriteria WHERE f_id_kriteria = 'C3'");
     }
     public function getSubKriteriaHargaKayu()
     {
-        return $this->db->query("SELECT id_sub_kriteria, nama_sub_kriteria, spesifikasi FROM sub_kriteria WHERE f_id_kriteria = 'C5'");
+        return $this->db->query("SELECT id_sub_kriteria, nama_sub_kriteria, bobot_sub_kriteria FROM sub_kriteria WHERE f_id_kriteria = 'C4'");
     }
 }
 $getDataAlternatif = new Alternatif();
