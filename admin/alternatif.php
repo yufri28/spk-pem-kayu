@@ -275,36 +275,36 @@ if (isset($_POST['hapus'])) {
 // $getSubJumlahPengunjung = $getDataAlternatif->getSubJumlahPengunjung();
 ?>
 <?php if (isset($_SESSION['success'])) : ?>
-    <script>
-        var successfuly = '<?php echo $_SESSION["success"]; ?>';
-        Swal.fire({
-            title: 'Sukses!',
-            text: successfuly,
-            icon: 'success',
-            confirmButtonText: 'OK'
-        }).then(function(result) {
-            if (result.isConfirmed) {
-                window.location.href = '';
-            }
-        });
-    </script>
-    <?php unset($_SESSION['success']); // Menghapus session setelah ditampilkan 
+<script>
+var successfuly = '<?php echo $_SESSION["success"]; ?>';
+Swal.fire({
+    title: 'Sukses!',
+    text: successfuly,
+    icon: 'success',
+    confirmButtonText: 'OK'
+}).then(function(result) {
+    if (result.isConfirmed) {
+        window.location.href = '';
+    }
+});
+</script>
+<?php unset($_SESSION['success']); // Menghapus session setelah ditampilkan 
     ?>
 <?php endif; ?>
 <?php if (isset($_SESSION['error'])) : ?>
-    <script>
-        Swal.fire({
-            title: 'Error!',
-            text: '<?php echo $_SESSION['error']; ?>',
-            icon: 'error',
-            confirmButtonText: 'OK'
-        }).then(function(result) {
-            if (result.isConfirmed) {
-                window.location.href = '';
-            }
-        });
-    </script>
-    <?php unset($_SESSION['error']); // Menghapus session setelah ditampilkan 
+<script>
+Swal.fire({
+    title: 'Error!',
+    text: '<?php echo $_SESSION['error']; ?>',
+    icon: 'error',
+    confirmButtonText: 'OK'
+}).then(function(result) {
+    if (result.isConfirmed) {
+        window.location.href = '';
+    }
+});
+</script>
+<?php unset($_SESSION['error']); // Menghapus session setelah ditampilkan 
     ?>
 <?php endif; ?>
 <div class="container" style="font-family: 'Prompt', sans-serif; height: 100vh;">
@@ -321,14 +321,16 @@ if (isset($_POST['hapus'])) {
                         <div class="card-body">
                             <div class="mb-3 mt-3">
                                 <label for="exampleFormControlInput1" class="form-label">Nama Kayu</label>
-                                <input type="text" name="nama_alternatif" class="form-control" id="exampleFormControlInput1" required placeholder="Nama kayu" />
+                                <input type="text" name="nama_alternatif" class="form-control"
+                                    id="exampleFormControlInput1" required placeholder="Nama kayu" />
                             </div>
                             <div class="mb-3 mt-3">
                                 <label for="sifat_mekanik" class="form-label">Sifat Mekanik</label>
                                 <select name="sifat_mekanik" id="sifat_mekanik" class="form-control">
                                     <option value="">-- Pilih --</option>
                                     <?php foreach ($dataSifatMekanik as $key => $sifat_mekanik) : ?>
-                                        <option value="<?= $sifat_mekanik['id_sub_kriteria']; ?>"><?= $sifat_mekanik['nama_sub_kriteria']; ?></option>
+                                    <option value="<?= $sifat_mekanik['id_sub_kriteria']; ?>">
+                                        <?= $sifat_mekanik['nama_sub_kriteria']; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -337,27 +339,31 @@ if (isset($_POST['hapus'])) {
                                 <select name="kelas_keawetan" id="kelas_keawetan" class="form-control">
                                     <option value="">-- Pilih --</option>
                                     <?php foreach ($dataSubKelasKeawetan as $key => $kelas_keawetan) : ?>
-                                        <option value="<?= $kelas_keawetan['id_sub_kriteria']; ?>"><?= $kelas_keawetan['nama_sub_kriteria']; ?></option>
+                                    <option value="<?= $kelas_keawetan['id_sub_kriteria']; ?>">
+                                        <?= $kelas_keawetan['nama_sub_kriteria']; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
                             <div class="mb-3 mt-3">
                                 <label for="umur" class="form-label">Umur Kayu</label>
-                                <input type="number" name="umur" required class="form-control" id="umur" placeholder="Umur dalam tahun" step="0.01" min="0.00" />
+                                <input type="number" name="umur" required class="form-control" id="umur"
+                                    placeholder="Umur dalam tahun" step="0.01" min="0.00" />
                                 <small style="font-size: 8pt"><i>Cukup masukkan angka saja. Cth 1 Tahun,
                                         cukup masukkan
                                         angka 1.</i></small>
                             </div>
                             <div class="mb-3 mt-3">
                                 <label for="harga" class="form-label">Harga Kayu</label>
-                                <input type="number" name="harga" required class="form-control" id="harga" placeholder="Contoh: 2000000" />
+                                <input type="number" name="harga" required class="form-control" id="harga"
+                                    placeholder="Contoh: 2000000" />
                                 <small style="font-size: 8pt"><i>Cukup masukkan angka saja. Cth 2.000.000,
                                         cukup masukkan
                                         angka 2000000.</i></small>
                             </div>
                             <div class="mb-3 mt-3">
                                 <label for="gambar" class="form-label">Gambar</label>
-                                <input type="file" accept=".jpg,.jpeg,.png" class="form-control" name="gambar" id="gambar" required />
+                                <input type="file" accept=".jpg,.jpeg,.png" class="form-control" name="gambar"
+                                    id="gambar" required />
                             </div>
 
                             <button type="submit" name="simpan" class="btn col-12 btn-outline-secondary">
@@ -372,7 +378,8 @@ if (isset($_POST['hapus'])) {
                     <div class="card-header">DAFTAR ALTERNATIF</div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered nowrap" style="width:100%" id="table-penilaian">
+                            <table class="table table-striped table-bordered nowrap" style="width:100%"
+                                id="table-penilaian">
                                 <thead>
                                     <tr>
                                         <th scope="col">No</th>
@@ -387,24 +394,31 @@ if (isset($_POST['hapus'])) {
                                 </thead>
                                 <tbody class="table-group-divider">
                                     <?php foreach ($dataAlternatif as $i => $alternatif) : ?>
-                                        <tr>
-                                            <th scope="row"><?= $i + 1; ?></th>
-                                            <td><a href="../user_area/gambar/<?= $alternatif['gambar'] == '-' ? 'no-img.png' : $alternatif['gambar']; ?>" data-lightbox="image-1" data-title="<?= $alternatif['nama_alternatif']; ?>"><img style="width:100px; height:100px;" src="../user_area/gambar/<?= $alternatif['gambar'] == '-' ? 'no-img.png' : $alternatif['gambar']; ?>" alt=""></a>
-                                            </td>
-                                            <td><?= $alternatif['nama_alternatif']; ?></td>
-                                            <td><?= $alternatif['nama_C1']; ?></td>
-                                            <td><?= $alternatif['nama_C2']; ?></td>
-                                            <td><?= $alternatif['umur']; ?> Tahun</td>
-                                            <td><?= $alternatif['harga']; ?></td>
-                                            <td>
-                                                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#edit<?= $alternatif['id_alternatif']; ?>">
-                                                    Edit
-                                                </button>
-                                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#hapus<?= $alternatif['id_alternatif']; ?>">
-                                                    Hapus
-                                                </button>
-                                            </td>
-                                        </tr>
+                                    <tr>
+                                        <th scope="row"><?= $i + 1; ?></th>
+                                        <td><a href="../user_area/gambar/<?= $alternatif['gambar'] == '-' ? 'no-img.png' : $alternatif['gambar']; ?>"
+                                                data-lightbox="image-1"
+                                                data-title="<?= $alternatif['nama_alternatif']; ?>"><img
+                                                    style="width:100px; height:100px;"
+                                                    src="../user_area/gambar/<?= $alternatif['gambar'] == '-' ? 'no-img.png' : $alternatif['gambar']; ?>"
+                                                    alt=""></a>
+                                        </td>
+                                        <td><?= $alternatif['nama_alternatif']; ?></td>
+                                        <td><?= $alternatif['nama_C1']; ?></td>
+                                        <td><?= $alternatif['nama_C2']; ?></td>
+                                        <td><?= $alternatif['umur']; ?> Tahun</td>
+                                        <td><?= $alternatif['harga']; ?></td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                                data-bs-target="#edit<?= $alternatif['id_alternatif']; ?>">
+                                                Edit
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                                data-bs-target="#hapus<?= $alternatif['id_alternatif']; ?>">
+                                                Hapus
+                                            </button>
+                                        </td>
+                                    </tr>
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
@@ -418,103 +432,119 @@ if (isset($_POST['hapus'])) {
 
 <?php foreach ($dataAlternatif as $alternatif) : ?>
 
-    <div class="modal fade" id="edit<?= $alternatif['id_alternatif']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form method="post" action="" enctype="multipart/form-data">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal edit</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <input type="hidden" name="id_alternatif" value="<?= $alternatif['id_alternatif']; ?>">
-                    <div class="modal-body">
-                        <div class="card-body">
-                            <div class="mb-3 mt-3">
-                                <label for="exampleFormControlInput1" class="form-label">Nama Alternatif</label>
-                                <input type="text" class="form-control" required name="nama_alternatif" value="<?= $alternatif['nama_alternatif']; ?>" id="exampleFormControlInput1" placeholder="Nama Alternatif" />
-                            </div>
-                        </div>
+<div class="modal fade" id="edit<?= $alternatif['id_alternatif']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal edit</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <input type="hidden" name="id_alternatif" value="<?= $alternatif['id_alternatif']; ?>">
+                <div class="modal-body">
+                    <div class="card-body">
                         <div class="mb-3 mt-3">
-                            <label for="sifat_mekanik" class="form-label">Sifat Mekanik</label>
-                            <select name="sifat_mekanik" id="sifat_mekanik" class="form-control">
-                                <option value="">-- Pilih --</option>
-                                <?php foreach ($dataSifatMekanik as $key => $sifat_mekanik) : ?>
-                                    <option <?= $sifat_mekanik['id_sub_kriteria'] == $alternatif['id_sub_C1'] ? 'selected' : ''; ?> value="<?= $sifat_mekanik['id_sub_kriteria']; ?>"><?= $sifat_mekanik['nama_sub_kriteria']; ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="mb-3 mt-3">
-                            <label for="kelas_keawetan" class="form-label">Kelas Keawetan</label>
-                            <select name="kelas_keawetan" id="kelas_keawetan" class="form-control">
-                                <option value="">-- Pilih --</option>
-                                <?php foreach ($dataSubKelasKeawetan as $key => $kelas_keawetan) : ?>
-                                    <option <?= $kelas_keawetan['id_sub_kriteria'] == $alternatif['id_sub_C2'] ? 'selected' : ''; ?> value="<?= $kelas_keawetan['id_sub_kriteria']; ?>"><?= $kelas_keawetan['nama_sub_kriteria']; ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="mb-3 mt-3">
-                            <label for="umur" class="form-label">Umur Kayu</label>
-                            <input type="number" name="umur" required class="form-control" value="<?= $alternatif['umur']; ?>" id="umur" placeholder="Umur dalam tahun" step="0.01" min="0.00" />
-                            <small style="font-size: 8pt"><i>Cukup masukkan angka saja. Cth 1 Tahun,
-                                    cukup masukkan
-                                    angka 1.</i></small>
-                        </div>
-                        <div class="mb-3 mt-3">
-                            <label for="harga" class="form-label">Harga Kayu</label>
-                            <input type="number" name="harga" required class="form-control" value="<?= $alternatif['harga']; ?>" id="harga" placeholder="Contoh: 2000000" />
-                            <small style="font-size: 8pt"><i>Cukup masukkan angka saja. Cth 2.000.000,
-                                    cukup masukkan
-                                    angka 2000000.</i></small>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-3 mt-3">
-                                <input type="hidden" name="gambar_lama" value="<?= $alternatif['gambar']; ?>">
-                                <label for="gambar" class="form-label">Gambar</label>
-                                <input type="file" accept=".jpg,.jpeg,.png" class="form-control" name="gambar" id="gambar" />
-                                <?php if ($alternatif['gambar'] == '-') : ?>
-                                    <img class="mt-2" style="width: 150px; height:150px;" src="../user_area/gambar/gereja.jpg" alt="">
-                                <?php else : ?>
-                                    <img class="mt-2" style="width: 150px; height:150px;" src="../user_area/gambar/<?= $alternatif['gambar']; ?>" alt="">
-                                <?php endif; ?>
-                            </div>
+                            <label for="exampleFormControlInput1" class="form-label">Nama Alternatif</label>
+                            <input type="text" class="form-control" required name="nama_alternatif"
+                                value="<?= $alternatif['nama_alternatif']; ?>" id="exampleFormControlInput1"
+                                placeholder="Nama Alternatif" />
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" name="edit" class="btn btn-outline-primary">
-                            Simpan
-                        </button>
+                    <div class="mb-3 mt-3">
+                        <label for="sifat_mekanik" class="form-label">Sifat Mekanik</label>
+                        <select name="sifat_mekanik" id="sifat_mekanik" class="form-control">
+                            <option value="">-- Pilih --</option>
+                            <?php foreach ($dataSifatMekanik as $key => $sifat_mekanik) : ?>
+                            <option
+                                <?= $sifat_mekanik['id_sub_kriteria'] == $alternatif['id_sub_C1'] ? 'selected' : ''; ?>
+                                value="<?= $sifat_mekanik['id_sub_kriteria']; ?>">
+                                <?= $sifat_mekanik['nama_sub_kriteria']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
-                </form>
-            </div>
+                    <div class="mb-3 mt-3">
+                        <label for="kelas_keawetan" class="form-label">Kelas Keawetan</label>
+                        <select name="kelas_keawetan" id="kelas_keawetan" class="form-control">
+                            <option value="">-- Pilih --</option>
+                            <?php foreach ($dataSubKelasKeawetan as $key => $kelas_keawetan) : ?>
+                            <option
+                                <?= $kelas_keawetan['id_sub_kriteria'] == $alternatif['id_sub_C2'] ? 'selected' : ''; ?>
+                                value="<?= $kelas_keawetan['id_sub_kriteria']; ?>">
+                                <?= $kelas_keawetan['nama_sub_kriteria']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <label for="umur" class="form-label">Umur Kayu</label>
+                        <input type="number" name="umur" required class="form-control"
+                            value="<?= $alternatif['umur']; ?>" id="umur" placeholder="Umur dalam tahun" step="0.01"
+                            min="0.00" />
+                        <small style="font-size: 8pt"><i>Cukup masukkan angka saja. Cth 1 Tahun,
+                                cukup masukkan
+                                angka 1.</i></small>
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <label for="harga" class="form-label">Harga Kayu</label>
+                        <input type="number" name="harga" required class="form-control"
+                            value="<?= $alternatif['harga']; ?>" id="harga" placeholder="Contoh: 2000000" />
+                        <small style="font-size: 8pt"><i>Cukup masukkan angka saja. Cth 2.000.000,
+                                cukup masukkan
+                                angka 2000000.</i></small>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3 mt-3">
+                            <input type="hidden" name="gambar_lama" value="<?= $alternatif['gambar']; ?>">
+                            <label for="gambar" class="form-label">Gambar</label>
+                            <input type="file" accept=".jpg,.jpeg,.png" class="form-control" name="gambar"
+                                id="gambar" />
+                            <?php if ($alternatif['gambar'] == '-') : ?>
+                            <img class="mt-2" style="width: 150px; height:150px;" src="../user_area/gambar/gereja.jpg"
+                                alt="">
+                            <?php else : ?>
+                            <img class="mt-2" style="width: 150px; height:150px;"
+                                src="../user_area/gambar/<?= $alternatif['gambar']; ?>" alt="">
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" name="edit" class="btn btn-outline-primary">
+                        Simpan
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 <?php endforeach; ?>
 <?php foreach ($dataAlternatif as $alternatif) : ?>
-    <div class="modal fade" id="hapus<?= $alternatif['id_alternatif']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form method="post" action="">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal hapus</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <input type="hidden" name="id_alternatif" value="<?= $alternatif['id_alternatif']; ?>">
-                    <input type="hidden" name="gambar_lama" value="<?= $alternatif['gambar']; ?>">
-                    <div class="modal-body">
-                        <p>Anda yakin ingin menghapus alternatif <strong>
-                                <?= $alternatif['nama_alternatif']; ?></strong> ?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" name="hapus" class="btn btn-outline-primary">
-                            Hapus
-                        </button>
-                    </div>
-                </form>
-            </div>
+<div class="modal fade" id="hapus<?= $alternatif['id_alternatif']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal hapus</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <input type="hidden" name="id_alternatif" value="<?= $alternatif['id_alternatif']; ?>">
+                <input type="hidden" name="gambar_lama" value="<?= $alternatif['gambar']; ?>">
+                <div class="modal-body">
+                    <p>Anda yakin ingin menghapus alternatif <strong>
+                            <?= $alternatif['nama_alternatif']; ?></strong> ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" name="hapus" class="btn btn-outline-primary">
+                        Hapus
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 <?php endforeach; ?>
 <?php
 require_once './footer.php';

@@ -1,270 +1,64 @@
 <?php 
 require_once './header.php';
-require_once './classes/kriteria_v1.php';
-require_once './classes/alternatif.php';
-
-$post = false;
-
-$prioritas1 = "";
-$prioritas2 = "";
-$prioritas3 = "";
-$prioritas4 = "";
-$jenis_c4 = "";
-$jenis_kriteria4 = "";
-
-$C1 = 1;
-$C2 = 1;
-$C3 = 1;
-$C4 = 1;
-
-if(isset($_POST['simpan'])){
-    $prioritas1 = $_POST['prioritas_1'];
-    $prioritas2 = $_POST['prioritas_2'];
-    $prioritas3 = $_POST['prioritas_3'];
-    $prioritas4 = $_POST['prioritas_4'];
-    $jenis_c4 = $_POST['jenis_c4'];
-
-
-    if($jenis_c4 == 1)
-    {
-        $jenis_kriteria4 = "benefit";
-    }else if($jenis_c4 == 0){
-        $jenis_kriteria4 = "cost";
-    }
-
-    $dataTampung = [
-        $prioritas1,$prioritas2,$prioritas3,$prioritas4
-    ];
-    $dataBobotKriteria = [
-        $prioritas1 => 0.25,
-        $prioritas2 => 0.2,
-        $prioritas3 => 0.15,
-        $prioritas4 => 0.2
-    ];
-
-  
-   
-    foreach ($dataBobotKriteria as $key => $value) {
-       switch ($key) {
-        case "Biaya masuk":
-            $C1 = $value;
-            break;
-        case "Fasilitas":
-            $C2 = $value;
-            break;
-        case "Jarak dari pusat kota":
-            $C3 = $value;
-            break;
-        case "Jumlah pengunjung":
-            $C4 = $value;
-            break;
-       }
-    }
-
-    $post = true;
-}
-
-
-$dataKriteria = [
-    "Biaya masuk", "Fasilitas", "Jarak dari pusat kota", "Jumlah pengunjung"
-];
-$alternatif_kriteria = $getDataAlternatif->alternatif_kriteria();
-
-
-include_once './hitung.php';
 
 ?>
 
-<div class="container" style="font-family: 'Prompt', sans-serif">
-    <div class="row">
-        <!-- <div class="d-md-flex"> -->
-        <div class="col-md-4 mt-3 mb-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="text-center pt-2 col-12">
-                        Masukan Prioritas
+<section class="">
+    <!-- Jumbotron -->
+    <div class="px-5 py-5 px-md-5 text-center text-lg-start" style="background-color: hsl(0, 0%, 96%);">
+        <div class="container" style="height:100vh;">
+            <div class="row gx-lg-5 align-items-center">
+                <div class="col-lg-5 mb-1 mb-lg-0">
+                    <h2 class="my-3 mt-4 display-5 fw-bolder ls-tight">
+                        Sistem Pendukung Keputusan <br />
+                        <span style="color:#5B9A8B">Pemilihan Kayu</span>
+                    </h2>
+                    <h5 style="color: hsl(217, 10%, 50.8%)">
+                        Sistem pendukung keputusan menggunakan metode <i style="color:#116A7B">ANALYTICAL HIERARCHY
+                            PROCESS (AHP) DAN MULTIOBJECTIVE OPTIMIZATION BY RATIO ANALYSIS (MOORA)</i>
                     </h5>
+                    <p class="fw-bolder" style="color: hsl(217, 10%, 50.8%)">Bingung dalam menentukan pilihan
+                        kayu? Klik 'Mulai' untuk
+                        mendapatkan bantuan dalam
+                        menemukan kayu yang cocok untuk mebel anda.</p>
+                    <a class="btn btn-lg py-2 px-4 me-5 col-lg-3" style="background-color: #29ADB2; color: white;"
+                        href="./user/hasil.php">Mulai</a>
                 </div>
-                <form method="post" action="">
-                    <div class="card-body">
-                        <label class="form-check-label" for="flexRadioDefault2">
-                            Apakah anda suka tempat yang ramai?
-                        </label>
-                        <div class="form-check">
-                            <input class="form-check-input" <?=$jenis_c4 == 1 ? 'checked':'';?> required type="radio"
-                                value="1" name="jenis_c4" id="jenis_c41">
-                            <label class="form-check-label" for="jenis_c41">
-                                Suka
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" required <?=$jenis_c4 == 0 ? 'checked':'';?> type="radio"
-                                value="0" name="jenis_c4" id="jenis_c42">
-                            <label class="form-check-label" for="jenis_c42">
-                                Tidak suka
-                            </label>
-                        </div>
-                        <div class="mb-3 mt-3">
-                            <label for="prioritas_1" class="form-label">Prioritas 1</label>
-                            <select class="form-control" id="prioritas_1" name="prioritas_1"
-                                aria-label="Default select example">
-                                <option value="">-- Pilih prioritas 1 --</option>
-                                <?php foreach($dataKriteria as $kriteria):?>
-                                <option <?=$kriteria == $prioritas1 ? 'selected':'';?> value="<?=$kriteria;?>">
-                                    <?=$kriteria;?>
-                                </option>
-                                <?php endforeach;?>
-                            </select>
-                        </div>
-                        <div class="mb-3 mt-3">
-                            <label for="prioritas_2" class="form-label">Prioritas 2</label>
-                            <select class="form-control" id="prioritas_2" name="prioritas_2">
-                                <option value="">-- Pilih prioritas 2 --</option>
-                                <?php foreach($dataKriteria as $kriteria):?>
-                                <option <?=$kriteria == $prioritas2 ? 'selected':'';?> value="<?=$kriteria;?>">
-                                    <?=$kriteria;?>
-                                </option>
-                                <?php endforeach;?>
-                            </select>
-                        </div>
-                        <div class="mb-3 mt-3">
-                            <label for="prioritas_3" class="form-label">Prioritas 3</label>
-                            <select class="form-control" id="prioritas_3" name="prioritas_3">
-                                <option value="">-- Pilih prioritas 3 --</option>
-                                <?php foreach($dataKriteria as $kriteria):?>
-                                <option <?=$kriteria == $prioritas3 ? 'selected':'';?> value="<?=$kriteria;?>">
-                                    <?=$kriteria;?>
-                                </option>
-                                <?php endforeach;?>
-                            </select>
-                        </div>
-                        <div class="mb-3 mt-3">
-                            <label for="prioritas_4" class="form-label">Prioritas 4</label>
-                            <select class="form-control" id="prioritas_4" name="prioritas_4">
-                                <option value="">-- Pilih prioritas 4 --</option>
-                                <?php foreach($dataKriteria as $kriteria):?>
-                                <option <?= $kriteria == $prioritas4 ? 'selected':'';?> value="<?=$kriteria;?>">
-                                    <?=$kriteria;?>
-                                </option>
-                                <?php endforeach;?>
-                            </select>
-                        </div>
-                        <button type="submit" name="simpan" class="btn col-12 btn-outline-success">
-                            Simpan
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <div class="col-md-8 mt-3 mb-3">
-            <div class="card">
-                <div class="card-header">
-                    DAFTAR kayu
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered nowrap" style="width:100%"
-                            id="table-penilaian">
-                            <thead>
-                                <tr>
-                                    <th scope="col">No</th>
-                                    <th scope="col">Gambar</th>
-                                    <th scope="col">Nama kayu</th>
-                                    <th scope="col">Biaya Masuk</th>
-                                    <th scope="col">Fasilitas</th>
-                                    <th scope="col">Jarak Pusat Kota</th>
-                                    <th scope="col">Jumlah Pengunjung</th>
-                                    <th scope="col">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody class="table-group-divider">
-                                <?php foreach ($alternatif_kriteria  as $i => $value):?>
-                                <tr>
-                                    <th scope="row"><?= $i+1; ?></th>
-                                    <td><a href="./gambar/<?= $value['gambar'] == '-'? 'no-img.png': $value['gambar'];?>"
-                                            data-lightbox="image-1" data-title="<?= $value['nama_alternatif']; ?>"><img
-                                                style="width:100px; height:100px;"
-                                                src="./gambar/<?= $value['gambar'] == '-'? 'no-img.png': $value['gambar']; ?>"
-                                                alt=""></a>
-                                    </td>
-                                    <td><?= $value['nama_alternatif']; ?></td>
-                                    <td><?= $value['namaC1']; ?></td>
-                                    <td><?= $value['namaC2']; ?></td>
-                                    <td><?= $value['namaC3']; ?></td>
-                                    <td><?= $value['namaC4']; ?></td>
-                                    <td>
-                                        <a href="https://www.google.com/maps/dir/?api=1&destination=<?=$value['latitude'];?>,<?=$value['longitude'];?>"
-                                            title="Lokasi di MAPS" class="btn btn-sm btn-success">Lokasi</a>
-                                    </td>
-                                </tr>
-                                <?php endforeach;?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- </div> -->
-    </div>
-</div>
-
-<?php if($post == true):?>
-<div class="container" style="font-family: 'Prompt', sans-serif">
-    <div class="row">
-        <div class="d-xxl-flex">
-            <div class="col-xxl-12 mt-3 ms-xxl-6 mb-1">
-                <!-- <div class="card"> -->
-                <div class="col-12">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div id="mapid"></div>
-                        </div>
-                    </div>
-                </div>
-                <!-- </div> -->
-                <div class="card mt-2">
-                    <div class="card-header">Hasil Perengkingan</div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered nowrap" style="width:100%" id="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Ranking</th>
-                                        <th scope="col">Nama kayu</th>
-                                        <th scope="col">Biaya Masuk</th>
-                                        <th scope="col">Fasilitas</th>
-                                        <th scope="col">Jarak Pusat Kota</th>
-                                        <th scope="col">Jumlah Pengunjung</th>
-                                        <th scope="col">Nilai Akhir</th>
-                                        <th scope="col">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="table-group-divider">
-                                    <?php foreach ($kedekatan_rel as $key => $value):?>
-                                    <tr>
-                                        <th scope="row"><?=$key+1;?></th>
-                                        <td><?=$value['nama_alternatif']?></td>
-                                        <td><?=$value['namaC1']?></td>
-                                        <td><?=$value['namaC2']?></td>
-                                        <td><?=$value['namaC3']?></td>
-                                        <td><?=$value['namaC4']?></td>
-                                        <td><?=$value['nilai_akhir'];?></td>
-                                        <td>
-                                            <a href="https://www.google.com/maps/dir/?api=1&destination=<?=$value['lat'];?>,<?=$value['long'];?>"
-                                                title="Lokasi di MAPS" class="btn btn-sm btn-success">Lokasi</a>
-                                        </td>
-                                    </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
+                <div class="col-lg-7 mb-1 mt-4 mb-lg-0">
+                    <div class="card">
+                        <div class="card-body shadow-lg d-flex justify-content-center py-5 px-md-5">
+                            <ol>
+                                <li><b>(Menurut Ralph C. Davis)</b>
+                                    Keputusan merupakan hasil penyelesaian yang tegas terhadap permasalahan yang
+                                    dihadapi.
+                                    Keputusan
+                                    adalah jawaban yang jelas atas sebuah pertanyaan. Keputusan harus menjawab
+                                    pertanyaan
+                                    tentang
+                                    apa yang dibicarakan dalam kaitannya dengan perencanaan. Keputusan juga dapat
+                                    berupa
+                                    pelaksanaan
+                                    tindakan yang berbeda secara signifikan dari rencana semula (Hasan, 2004).
+                                </li>
+                                <br>
+                                <li><b>(Menurut Mary Follett)</b>
+                                    Keputusan tersebut merupakan suatu atau sebagai hukum situasi. Berbeda dengan
+                                    menaati
+                                    suatu perintah jika semua fakta tersedia dan semua yang terlibat, baik pengawas
+                                    maupun
+                                    penegak hukum, mau mematuhi undang-undang atau ketentuannya. Kewenangan tetap
+                                    perlu
+                                    dijalankan, namun kewenangan adalah situasi (Hasan, 2004).
+                                </li>
+                            </ol>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<?php endif;?>
+    <!-- Jumbotron -->
+</section>
 <?php 
 require_once './../includes/footer.php';
 ?>
