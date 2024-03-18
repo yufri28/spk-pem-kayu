@@ -17,9 +17,9 @@ require_once './config.php';
     </form>
 
     <script>
-        function updateWeight(value) {
-            document.getElementById('weightDisplay').textContent = 'Bobot: ' + value;
-        }
+    function updateWeight(value) {
+        document.getElementById('weightDisplay').textContent = 'Bobot: ' + value;
+    }
     </script>
 
 </body>

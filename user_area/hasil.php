@@ -117,17 +117,59 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     ];
    
     $dataNormalisasi = $getDataHasil->getDataNormalisasi($c1,$c2,$c3,$c4);
-
     
     echo "<pre>";
-    print_r ($dataBobotKriteria);
+    print_r ($dataNormalisasi);
     echo "</pre>";  
+    $cc1 = 0;
+    $arrs = [];
+    
     foreach ($dataNormalisasi as $key => $value) {
-        $max = $value['norm_C1'] + $value['norm_C2'] + $value['norm_C3'] + $value['norm_C4']; 
-        echo $max;
-        echo "<br>";
+        $inc = 1;
+        for ($i=0; $i < count($value); $i++) { 
+            if($inc < 5){
+                $arrs[$key][$i] = $value['C'.$inc];
+                $inc++;
+            }
+        }
     }
 
+    echo "<pre>";
+    print_r ($arrs);
+    echo "</pre>";
+
+    // Inisialisasi array untuk menyimpan hasil penjumlahan
+    $hasil = array();
+
+    // Loop untuk menghitung nilai sesuai dengan rumus yang diberikan
+    for ($i = 0; $i < count($arrs); $i++) {
+        for ($j = 0; $j < count($arrs[$i]); $j++) {
+            $x = $arrs[$i][$j];
+            $y = $arrs[($i + 1) % count($arrs)][$j];
+            $hasil[$i][$j] = number_format($x / sqrt(pow($x, 2) + pow($y, 2)), 2);
+        }
+    }
+
+    // Menampilkan hasil
+    for ($i = 0; $i < count($hasil); $i++) {
+        for ($j = 0; $j < count($hasil[$i]); $j++) {
+            echo "array[$i][$j] = " . $hasil[$i][$j] . "<br>";
+        }
+    }
+    
+    $y = array();
+
+    // Loop untuk menghitung nilai y
+    for ($i = 0; $i < count($hasil); $i++) {
+        $y[$i] = ($hasil[$i][0] + $hasil[$i][1]) - ($hasil[$i][2] + $hasil[$i][3]);
+    }
+
+    // Menampilkan hasil y
+    for ($i = 0; $i < count($y); $i++) {
+        echo "y[$i] = " . $y[$i] . "<br>";
+    }
+
+    echo "<br>";
     die;
     // $dataPreferensiLimOne = $getDataHasil->getDataPreferensiLimOne($c1,$c2,$c3,$c4);
     // // $simpanRiwayat = $getDataHasil->simpanRiwayat($dataPreferensiLimOne['id_alternatif'],$c1,$c2,$c3,$c4);

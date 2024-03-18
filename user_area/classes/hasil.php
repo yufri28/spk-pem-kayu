@@ -14,39 +14,50 @@
         {
             $c_3 = 'Cost';
             $c_4 = 'Cost';
-            
             return $this->db->query("SELECT a.nama_alternatif, a.id_alternatif, a.umur, a.harga, a.gambar,
-            MAX(CASE WHEN k.id_kriteria = 'C1' THEN sk.bobot_sub_kriteria END) AS C1,
-            MAX(CASE WHEN k.id_kriteria = 'C2' THEN sk.bobot_sub_kriteria END) AS C2,
-            MAX(CASE WHEN k.id_kriteria = 'C3' THEN sk.bobot_sub_kriteria END) AS C3,
-            MAX(CASE WHEN k.id_kriteria = 'C4' THEN sk.bobot_sub_kriteria END) AS C4,
-            
-            (MAX(CASE WHEN k.id_kriteria = 'C1' THEN sk.bobot_sub_kriteria END)/(SELECT SQRT(SUM(POW(CASE WHEN k.id_kriteria = 'C1' THEN 	  	  sk.bobot_sub_kriteria END, 2))) FROM alternatif a
-            JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
-            JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
-            JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria) * ($c1)) AS norm_C1,
-            
-            (MAX(CASE WHEN k.id_kriteria = 'C2' THEN sk.bobot_sub_kriteria END)/(SELECT SQRT(SUM(POW(CASE WHEN k.id_kriteria = 'C2' THEN 	  	  sk.bobot_sub_kriteria END, 2))) FROM alternatif a
-            JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
-            JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
-            JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria) * ($c2)) AS norm_C2,
-            
-            (MAX(CASE WHEN k.id_kriteria = 'C3' THEN sk.bobot_sub_kriteria END)/(SELECT SQRT(SUM(POW(CASE WHEN k.id_kriteria = 'C3' THEN sk.bobot_sub_kriteria END, 2))) 
-            FROM alternatif a
-            JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
-            JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
-            JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria) * ($c3)) AS norm_C3,
-            
-            (MAX(CASE WHEN k.id_kriteria = 'C4' THEN sk.bobot_sub_kriteria END)/(SELECT SQRT(SUM(POW(CASE WHEN k.id_kriteria = 'C4' THEN 	  	  sk.bobot_sub_kriteria END, 2))) FROM alternatif a
-            JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
-            JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
-            JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria) * ($c4)) AS norm_C4
-            
-            FROM alternatif a
-            JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
-            JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
-            JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria
-            GROUP BY a.nama_alternatif, a.id_alternatif ORDER BY a.id_alternatif ASC;");
+                MAX(CASE WHEN k.id_kriteria = 'C1' THEN sk.bobot_sub_kriteria END) AS C1,
+                MAX(CASE WHEN k.id_kriteria = 'C2' THEN sk.bobot_sub_kriteria END) AS C2,
+                MAX(CASE WHEN k.id_kriteria = 'C3' THEN sk.bobot_sub_kriteria END) AS C3,
+                MAX(CASE WHEN k.id_kriteria = 'C4' THEN sk.bobot_sub_kriteria END) AS C4
+                
+                FROM alternatif a
+                JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
+                JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
+                JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria
+                GROUP BY a.nama_alternatif, a.id_alternatif ORDER BY a.id_alternatif ASC;");
+
+            // return $this->db->query("SELECT a.nama_alternatif, a.id_alternatif, a.umur, a.harga, a.gambar,
+            //     MAX(CASE WHEN k.id_kriteria = 'C1' THEN sk.bobot_sub_kriteria END) AS C1,
+            //     MAX(CASE WHEN k.id_kriteria = 'C2' THEN sk.bobot_sub_kriteria END) AS C2,
+            //     MAX(CASE WHEN k.id_kriteria = 'C3' THEN sk.bobot_sub_kriteria END) AS C3,
+            //     MAX(CASE WHEN k.id_kriteria = 'C4' THEN sk.bobot_sub_kriteria END) AS C4,
+                
+            //     (MAX(CASE WHEN k.id_kriteria = 'C1' THEN sk.bobot_sub_kriteria END)/(SELECT SQRT(SUM(POW(CASE WHEN k.id_kriteria = 'C1' THEN 	  	  sk.bobot_sub_kriteria END, 2))) FROM alternatif a
+            //     JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
+            //     JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
+            //     JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria) * ($c1)) AS norm_C1,
+                
+            //     (MAX(CASE WHEN k.id_kriteria = 'C2' THEN sk.bobot_sub_kriteria END)/(SELECT SQRT(SUM(POW(CASE WHEN k.id_kriteria = 'C2' THEN 	  	  sk.bobot_sub_kriteria END, 2))) FROM alternatif a
+            //     JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
+            //     JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
+            //     JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria) * ($c2)) AS norm_C2,
+                
+            //     (MAX(CASE WHEN k.id_kriteria = 'C3' THEN sk.bobot_sub_kriteria END)/(SELECT SQRT(SUM(POW(CASE WHEN k.id_kriteria = 'C3' THEN sk.bobot_sub_kriteria END, 2))) 
+            //     FROM alternatif a
+            //     JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
+            //     JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
+            //     JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria) * ($c3)) AS norm_C3,
+                
+            //     (MAX(CASE WHEN k.id_kriteria = 'C4' THEN sk.bobot_sub_kriteria END)/(SELECT SQRT(SUM(POW(CASE WHEN k.id_kriteria = 'C4' THEN 	  	  sk.bobot_sub_kriteria END, 2))) FROM alternatif a
+            //     JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
+            //     JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
+            //     JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria) * ($c4)) AS norm_C4
+                
+            //     FROM alternatif a
+            //     JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
+            //     JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
+            //     JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria
+            //     GROUP BY a.nama_alternatif, a.id_alternatif ORDER BY a.id_alternatif ASC;");
             
         }    
         
