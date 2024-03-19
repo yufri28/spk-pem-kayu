@@ -28,69 +28,69 @@ $array = array();
 // init k
 $k = 0;
 
+$_c3 = "cost";
+$_c4 = "cost";
+
 $data = $koneksi->query("SELECT * FROM kriteria ORDER BY id_kriteria");
 
 while ($row = mysqli_fetch_assoc($data)) {
     $array[] = $row['nama_kriteria'];
 }
 
-if($_SERVER['REQUEST_METHOD'] == 'POST'){
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $matrik = array();
-	$urut 	= 0;
+    $urut     = 0;
 
-	for ($i = 0; $i <= (count($array) - 2); $i++) {
-		for ($j = ($i + 1); $j <= (count($array) - 1); $j++) {
-			$urut++;
-			$opsi	= "opsi".$urut;
-			$bobot 	= "bobot".$urut;
-			if ($_POST[$opsi] == 1) {
-				$matrik[$i][$j] = $_POST[$bobot];
-				$matrik[$j][$i] = 1 / $_POST[$bobot];
-			} else {
-				$matrik[$i][$j] = 1 / $_POST[$bobot];
-				$matrik[$j][$i] = $_POST[$bobot];
-			}
-		}
-	}
+    for ($i = 0; $i <= (count($array) - 2); $i++) {
+        for ($j = ($i + 1); $j <= (count($array) - 1); $j++) {
+            $urut++;
+            $opsi    = "opsi" . $urut;
+            $bobot     = "bobot" . $urut;
+            if ($_POST[$opsi] == 1) {
+                $matrik[$i][$j] = $_POST[$bobot];
+                $matrik[$j][$i] = 1 / $_POST[$bobot];
+            } else {
+                $matrik[$i][$j] = 1 / $_POST[$bobot];
+                $matrik[$j][$i] = $_POST[$bobot];
+            }
+        }
+    }
 
     // diagonal --> bernilai 1
     for ($i = 0; $i <= (count($array) - 1); $i++) {
         $matrik[$i][$i] = 1;
     }
-    
+
     // inisialisasi jumlah tiap kolom dan baris kriteria
-	$jmlmpb = array();
-	$jmlmnk = array();
-	for ($i=0; $i <= (count($matrik) - 1); $i++) {
-		$jmlmpb[$i] = 0;
-		$jmlmnk[$i] = 0;
-	}
+    $jmlmpb = array();
+    $jmlmnk = array();
+    for ($i = 0; $i <= (count($matrik) - 1); $i++) {
+        $jmlmpb[$i] = 0;
+        $jmlmnk[$i] = 0;
+    }
 
-	// menghitung jumlah pada kolom kriteria tabel perbandingan berpasangan
-	for ($x=0; $x < count($matrik); $x++) {
-		for ($y=0; $y < count($matrik) ; $y++) {
-			$value		= $matrik[$x][$y];
-			$jmlmpb[$y] += $value;
-		}
-      
-	}
-    
-	// menghitung jumlah pada baris kriteria tabel nilai kriteria
-	// matrikb merupakan matrik yang telah dinormalisasi
-	for ($x=0; $x <= (count($matrik) - 1) ; $x++) {
-		for ($y=0; $y <= (count($matrik) - 1) ; $y++) {
-			$matrikb[$x][$y] = $matrik[$x][$y] / $jmlmpb[$y];
-			$value	= $matrikb[$x][$y];
-			$jmlmnk[$x] += $value;
-		}
+    // menghitung jumlah pada kolom kriteria tabel perbandingan berpasangan
+    for ($x = 0; $x < count($matrik); $x++) {
+        for ($y = 0; $y < count($matrik); $y++) {
+            $value        = $matrik[$x][$y];
+            $jmlmpb[$y] += $value;
+        }
+    }
 
-		// nilai priority vektor
-		$pv[$x]	 = $jmlmnk[$x] / count($matrik);
+    // menghitung jumlah pada baris kriteria tabel nilai kriteria
+    // matrikb merupakan matrik yang telah dinormalisasi
+    for ($x = 0; $x <= (count($matrik) - 1); $x++) {
+        for ($y = 0; $y <= (count($matrik) - 1); $y++) {
+            $matrikb[$x][$y] = $matrik[$x][$y] / $jmlmpb[$y];
+            $value    = $matrikb[$x][$y];
+            $jmlmnk[$x] += $value;
+        }
 
-		
-	}
+        // nilai priority vektor
+        $pv[$x]     = $jmlmnk[$x] / count($matrik);
+    }
 
-    for ($x=0; $x < (count($matrik)) ; $x++) {
+    for ($x = 0; $x < (count($matrik)); $x++) {
         switch ($x) {
             case 0:
                 $c1 = $pv[$x];
@@ -110,32 +110,32 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         }
     }
 
-   
-  
+
+
     $dataBobotKriteria = [
-        $c1,$c2,$c3,$c4
+        $c1, $c2, $c3, $c4
     ];
-   
-    $dataNormalisasi = $getDataHasil->getDataNormalisasi($c1,$c2,$c3,$c4);
-    
+
+    $dataNormalisasi = $getDataHasil->getDataNormalisasi($c1, $c2, $c3, $c4);
+
     echo "<pre>";
-    print_r ($dataNormalisasi);
-    echo "</pre>";  
+    print_r($dataNormalisasi);
+    echo "</pre>";
     $cc1 = 0;
     $arrs = [];
-    
+
     foreach ($dataNormalisasi as $key => $value) {
         $inc = 1;
-        for ($i=0; $i < count($value); $i++) { 
-            if($inc < 5){
-                $arrs[$key][$i] = $value['C'.$inc];
+        for ($i = 0; $i < count($value); $i++) {
+            if ($inc < 5) {
+                $arrs[$key][$i] = $value['C' . $inc];
                 $inc++;
             }
         }
     }
 
     echo "<pre>";
-    print_r ($arrs);
+    print_r($arrs);
     echo "</pre>";
 
     // Inisialisasi array untuk menyimpan hasil penjumlahan
@@ -156,7 +156,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             echo "array[$i][$j] = " . $hasil[$i][$j] . "<br>";
         }
     }
-    
+
     $y = array();
 
     // Loop untuk menghitung nilai y
@@ -169,14 +169,43 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         echo "y[$i] = " . $y[$i] . "<br>";
     }
 
-    echo "<br>";
+    $arrBaru = [];
+    foreach ($dataNormalisasi as $key => $value) {
+        $arrBaru[] = array(
+            "id_alternatif" => $value['id_alternatif'],
+            "nama_alternatif" => $value['nama_alternatif'],
+            "umur" => $value['umur'],
+            "harga" => $value['harga'],
+            "gambar" => $value['gambar'],
+            "C1" => $value['C1'],
+            "C2" => $value['C2'],
+            "C3" => $value['C3'],
+            "C4" => $value['C4'],
+            "preferensi" => $y[$key]
+        );
+    }
+
+    echo "<pre>";
+    print_r($arrBaru);
+    echo "</pre>";
+    // Fungsi untuk mengurutkan array berdasarkan nilai preferensi tertinggi ke terendah
+    usort($arrBaru, function ($a, $b) {
+        if ($a['preferensi'] == $b['preferensi']) {
+            return 0;
+        }
+        return ($a['preferensi'] > $b['preferensi']) ? -1 : 1;
+    });
+
+    // Menampilkan hasil pengurutan
+    echo "<pre>";
+    print_r($arrBaru);
+    echo "</pre>";
     die;
     // $dataPreferensiLimOne = $getDataHasil->getDataPreferensiLimOne($c1,$c2,$c3,$c4);
     // // $simpanRiwayat = $getDataHasil->simpanRiwayat($dataPreferensiLimOne['id_alternatif'],$c1,$c2,$c3,$c4);
     $post = true;
-
-}else{
-    $dataNormalisasi = $getDataHasil->getDataNormalisasi($c1,$c2,$c3,$c4);
+} else {
+    $dataNormalisasi = $getDataHasil->getDataNormalisasi($c1, $c2, $c3, $c4);
 }
 $array_skala = [
     ['nilai' => '1', 'keterangan' => 'Kedua Kriteria sama-sama penting'],
@@ -191,58 +220,58 @@ $increament = 0;
 $urut = 0;
 ?>
 <?php if (isset($_SESSION['success'])) : ?>
-<script>
-var successfuly = '<?php echo $_SESSION["success"]; ?>';
-Swal.fire({
-    title: 'Sukses!',
-    text: successfuly,
-    icon: 'success',
-    confirmButtonText: 'OK'
-}).then(function(result) {
-    if (result.isConfirmed) {
-        window.location.href = '';
-    }
-});
-</script>
-<?php unset($_SESSION['success']); // Menghapus session setelah ditampilkan 
+    <script>
+        var successfuly = '<?php echo $_SESSION["success"]; ?>';
+        Swal.fire({
+            title: 'Sukses!',
+            text: successfuly,
+            icon: 'success',
+            confirmButtonText: 'OK'
+        }).then(function(result) {
+            if (result.isConfirmed) {
+                window.location.href = '';
+            }
+        });
+    </script>
+    <?php unset($_SESSION['success']); // Menghapus session setelah ditampilkan 
     ?>
 <?php endif; ?>
 <?php if (isset($_SESSION['error'])) : ?>
-<script>
-Swal.fire({
-    title: 'Error!',
-    text: '<?php echo $_SESSION['error']; ?>',
-    icon: 'error',
-    confirmButtonText: 'OK'
-}).then(function(result) {
-    if (result.isConfirmed) {
-        window.location.href = '';
-    }
-});
-</script>
-<?php unset($_SESSION['error']); // Menghapus session setelah ditampilkan 
+    <script>
+        Swal.fire({
+            title: 'Error!',
+            text: '<?php echo $_SESSION['error']; ?>',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        }).then(function(result) {
+            if (result.isConfirmed) {
+                window.location.href = '';
+            }
+        });
+    </script>
+    <?php unset($_SESSION['error']); // Menghapus session setelah ditampilkan 
     ?>
 <?php endif; ?>
 <style>
-table {
-    font-size: 10pt;
-}
+    table {
+        font-size: 10pt;
+    }
 
-ol {
-    text-align: start;
-}
+    ol {
+        text-align: start;
+    }
 </style>
 </style>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    let button_like_link = document.getElementById('btn-like-link');
+    document.addEventListener('DOMContentLoaded', function() {
+        let button_like_link = document.getElementById('btn-like-link');
 
-    button_like_link.addEventListener('click', function() {
-        Swal.fire({
-            title: 'Panduan',
-            text: 'Langkah-langkah pengisian form perbandingan kriteria:',
-            icon: 'warning',
-            html: `
+        button_like_link.addEventListener('click', function() {
+            Swal.fire({
+                title: 'Panduan',
+                text: 'Langkah-langkah pengisian form perbandingan kriteria:',
+                icon: 'warning',
+                html: `
             <ol>
                 <li>Pilih Kriteria yang lebih penting</li>
                 <li>Masukkan Nilai perbandingannya berdasarkan tabel berikut:</li>
@@ -255,11 +284,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($array_skala as $key => $value): ?>
+                        <?php foreach ($array_skala as $key => $value) : ?>
                         <tr>
-                            <th scope="row"><?=++$increament;?></th>
-                            <td><?= $value['nilai'];?></td>
-                            <td><?= $value['keterangan'];?></td>
+                            <th scope="row"><?= ++$increament; ?></th>
+                            <td><?= $value['nilai']; ?></td>
+                            <td><?= $value['keterangan']; ?></td>
                         </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -267,11 +296,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 <li>Klik tombol submit</li>
             </ol>
         `,
-            confirmButtonText: 'Paham'
-        });
+                confirmButtonText: 'Paham'
+            });
 
+        });
     });
-});
 </script>
 <div class="container mb-5" style="font-family: 'Prompt', sans-serif;">
     <div class="row">
@@ -294,12 +323,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         </li>
                         <hr>
                         <div class="d-flex">
-                            <button type="button" id="btn-like-link"
-                                class="button-like-link me-2 btn btn-primary mb-4 d-flex justify-content-end"><small
-                                    class="">Baca
+                            <button type="button" id="btn-like-link" class="button-like-link me-2 btn btn-primary mb-4 d-flex justify-content-end"><small class="">Baca
                                     Panduan</small></button>
-                            <button type="button" data-bs-toggle="modal" data-bs-target="#isi-form"
-                                class="btn btn-secondary mb-4 d-flex justify-content-end"><small class="">Isi
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#isi-form" class="btn btn-secondary mb-4 d-flex justify-content-end"><small class="">Isi
                                     Form</small></button>
                         </div>
                     </ul>
@@ -308,8 +334,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="card-header">HASIL PREFERENSI</div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered nowrap" style="width:100%"
-                                id="table-penilaian">
+                            <table class="table table-striped table-bordered nowrap" style="width:100%" id="table-penilaian">
                                 <thead>
                                     <tr>
                                         <th scope="col">No</th>
@@ -324,31 +349,24 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </thead>
                                 <tbody class="table-group-divider">
                                     <?php foreach ($dataAlternatif as $i => $alternatif) : ?>
-                                    <tr>
-                                        <th scope="row"><?= $i + 1; ?></th>
-                                        <td><a href="../user_area/gambar/<?= $alternatif['gambar'] == '-' ? 'no-img.png' : $alternatif['gambar']; ?>"
-                                                data-lightbox="image-1"
-                                                data-title="<?= $alternatif['nama_alternatif']; ?>"><img
-                                                    style="width:100px; height:100px;"
-                                                    src="../user_area/gambar/<?= $alternatif['gambar'] == '-' ? 'no-img.png' : $alternatif['gambar']; ?>"
-                                                    alt=""></a>
-                                        </td>
-                                        <td><?= $alternatif['nama_alternatif']; ?></td>
-                                        <td><?= $alternatif['nama_C1']; ?></td>
-                                        <td><?= $alternatif['nama_C2']; ?></td>
-                                        <td><?= $alternatif['umur']; ?> Tahun</td>
-                                        <td><?= $alternatif['harga']; ?></td>
-                                        <td>
-                                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                                data-bs-target="#edit<?= $alternatif['id_alternatif']; ?>">
-                                                Edit
-                                            </button>
-                                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                                                data-bs-target="#hapus<?= $alternatif['id_alternatif']; ?>">
-                                                Hapus
-                                            </button>
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <th scope="row"><?= $i + 1; ?></th>
+                                            <td><a href="../user_area/gambar/<?= $alternatif['gambar'] == '-' ? 'no-img.png' : $alternatif['gambar']; ?>" data-lightbox="image-1" data-title="<?= $alternatif['nama_alternatif']; ?>"><img style="width:100px; height:100px;" src="../user_area/gambar/<?= $alternatif['gambar'] == '-' ? 'no-img.png' : $alternatif['gambar']; ?>" alt=""></a>
+                                            </td>
+                                            <td><?= $alternatif['nama_alternatif']; ?></td>
+                                            <td><?= $alternatif['nama_C1']; ?></td>
+                                            <td><?= $alternatif['nama_C2']; ?></td>
+                                            <td><?= $alternatif['umur']; ?> Tahun</td>
+                                            <td><?= $alternatif['harga']; ?></td>
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#edit<?= $alternatif['id_alternatif']; ?>">
+                                                    Edit
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#hapus<?= $alternatif['id_alternatif']; ?>">
+                                                    Hapus
+                                                </button>
+                                            </td>
+                                        </tr>
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
@@ -382,36 +400,32 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </thead>
                                 <tbody>
                                     <?php for ($i = 0; $i <= (count($array) - 2); $i++) : ?>
-                                    <?php for ($j = ($i + 1); $j <= (count($array) - 1); $j++) : ?>
-                                    <?php $k++; ?>
-                                    <tr>
-                                        <td>
-                                            <div class="form-check me-3">
-                                                <input class="form-check-input" type="radio" name="opsi<?= $k ?>"
-                                                    id="flexRadioDefault<?= $k ?>" value="1">
-                                                <label class="form-check-label" for="flexRadioDefault<?= $k ?>">
-                                                    <?= $array[$i]; ?>
-                                                </label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="opsi<?= $k ?>"
-                                                    value="2" id="flexRadioDefaults<?= $k ?>">
-                                                <label class="form-check-label" for="flexRadioDefaults<?= $k ?>">
-                                                    <?= $array[$j]; ?>
-                                                </label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="mb-3">
-                                                <input class="form-control" type="number" placeholder="0"
-                                                    name="bobot<?php echo $k;?>" value="<?php echo $nilai ?>" max="9"
-                                                    required>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <?php endfor; ?>
+                                        <?php for ($j = ($i + 1); $j <= (count($array) - 1); $j++) : ?>
+                                            <?php $k++; ?>
+                                            <tr>
+                                                <td>
+                                                    <div class="form-check me-3">
+                                                        <input class="form-check-input" type="radio" name="opsi<?= $k ?>" id="flexRadioDefault<?= $k ?>" value="1">
+                                                        <label class="form-check-label" for="flexRadioDefault<?= $k ?>">
+                                                            <?= $array[$i]; ?>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="opsi<?= $k ?>" value="2" id="flexRadioDefaults<?= $k ?>">
+                                                        <label class="form-check-label" for="flexRadioDefaults<?= $k ?>">
+                                                            <?= $array[$j]; ?>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="mb-3">
+                                                        <input class="form-control" type="number" placeholder="0" name="bobot<?php echo $k; ?>" value="<?php echo $nilai ?>" max="9" required>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php endfor; ?>
                                     <?php endfor; ?>
                                 </tbody>
                             </table>
