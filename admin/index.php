@@ -18,10 +18,10 @@ require_once './header.php';
                 </div>
             </div>
         </div>
-        <div class="col-lg-8 mt-lg-5 mb-lg-5">
-            <div class="card mb-5">
+        <div class="col-lg-10 mt-lg-5 mb-lg-5">
+            <div class="card mb-5 shadow-lg">
                 <div class="card-body">
-                    <div id="">
+                    <div class="m-4">
                         <ol>
                             <li><b>(Menurut Ralph C. Davis)</b>
                                 Keputusan merupakan hasil penyelesaian yang tegas terhadap permasalahan yang dihadapi.

@@ -37,7 +37,7 @@ if (!isset($_SESSION['login']) && $_SESSION['login'] != true) {
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg sticky-top shadow-lg fixed-top" style="background-color: #FF9843"
+    <nav class="navbar navbar-expand-lg sticky-top shadow-lg fixed-top" style="background-color: #27374D"
         data-bs-theme="dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">

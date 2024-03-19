@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>SPK Pemilihan Laptop</title>
+    <title>SPK Pemilihan Kayu</title>
     <style>
     #mapid {
         height: 100vh;
@@ -28,7 +28,8 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="btn btn-md btn-primary py-2 px-4  me-5" href="./auth/login.php">Login</a>
+                        <a class="btn btn-md btn-primary py-2 px-4 me-5" style="background-color:#7E2553; border: 0px"
+                            href="./auth/login.php">Login</a>
                     </li>
                 </ul>
             </div>
@@ -41,23 +42,8 @@
         <div class="px-5 py-5 px-md-5 text-center text-lg-start" style="background-color: hsl(0, 0%, 96%);">
             <div class="container" style="height:100vh;">
                 <div class="row gx-lg-5 align-items-center">
-                    <div class="col-lg-5 mb-1 mb-lg-0">
-                        <h2 class="my-3 mt-4 display-5 fw-bolder ls-tight">
-                            Sistem Pendukung Keputusan <br />
-                            <span style="color:#5B9A8B">Pemilihan Kayu</span>
-                        </h2>
-                        <h5 style="color: hsl(217, 10%, 50.8%)">
-                            Sistem pendukung keputusan menggunakan metode <i style="color:#116A7B">ANALYTICAL HIERARCHY
-                                PROCESS (AHP) DAN MULTIOBJECTIVE OPTIMIZATION BY RATIO ANALYSIS (MOORA)</i>
-                        </h5>
-                        <p class="fw-bolder" style="color: hsl(217, 10%, 50.8%)">Bingung dalam menentukan pilihan
-                            kayu? Klik 'Mulai' untuk
-                            mendapatkan bantuan dalam
-                            menemukan kayu yang cocok untuk mebel anda.</p>
-                        <a class="btn btn-lg py-2 px-4 me-5 col-lg-3" style="background-color: #29ADB2; color: white;"
-                            href="./user_area/hasil.php">Mulai</a>
-                    </div>
-                    <div class="col-lg-7 mb-1 mt-4 mb-lg-0">
+
+                    <div class="col-lg-6 mb-1 mt-4 mb-lg-0">
                         <div class="card">
                             <div class="card-body shadow-lg d-flex justify-content-center py-5 px-md-5">
                                 <ol>
@@ -86,6 +72,22 @@
                                 </ol>
                             </div>
                         </div>
+                    </div>
+                    <div class="col-lg-6 mb-1 mb-lg-0">
+                        <h2 class="my-3 mt-4 display-5 fw-bolder ls-tight">
+                            Sistem Pendukung Keputusan <br />
+                            <span style="color:#7E2553">Pemilihan Kayu</span>
+                        </h2>
+                        <h5 style="color: hsl(217, 10%, 50.8%)">
+                            Sistem pendukung keputusan menggunakan metode <i style="color:#116A7B">ANALYTICAL HIERARCHY
+                                PROCESS (AHP) DAN MULTIOBJECTIVE OPTIMIZATION BY RATIO ANALYSIS (MOORA)</i>
+                        </h5>
+                        <p class="fw-bolder" style="color: hsl(217, 10%, 50.8%)">Bingung dalam menentukan pilihan
+                            kayu? Klik 'Mulai' untuk
+                            mendapatkan bantuan dalam
+                            menemukan kayu yang cocok untuk mebel anda.</p>
+                        <a class="btn btn-lg py-2 px-4 me-5 col-lg-3" style="background-color: #1D2B53; color: white;"
+                            href="./user_area/hasil.php">Mulai</a>
                     </div>
                 </div>
             </div>

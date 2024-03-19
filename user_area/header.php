@@ -32,7 +32,7 @@ global $conn;
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg sticky-top shadow-lg fixed-top" style="background-color: #0B666A"
+    <nav class="navbar navbar-expand-lg sticky-top shadow-lg fixed-top" style="background-color: #27374D"
         data-bs-theme="dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">

@@ -29,10 +29,10 @@ $array = array();
 $k = 0;
 
 $_c3 = "benefit";
-$_c4 = "cost";
+$_c4 = "benefit";
 
 $data = $koneksi->query("SELECT * FROM kriteria ORDER BY id_kriteria");
-
+$arrBaru =  (array)$dataAlternatif;
 while ($row = mysqli_fetch_assoc($data)) {
     $array[] = $row['nama_kriteria'];
 }
@@ -40,6 +40,8 @@ while ($row = mysqli_fetch_assoc($data)) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $matrik = array();
     $urut     = 0;
+    $_c3 = $_POST['ket_umur'] == '1'?'cost':'benefit';
+    $_c4 = $_POST['ket_harga'] == '1'?'cost':'benefit';
 
     for ($i = 0; $i <= (count($array) - 2); $i++) {
         for ($j = ($i + 1); $j <= (count($array) - 1); $j++) {
@@ -118,9 +120,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $dataNormalisasi = $getDataHasil->getDataNormalisasi($c1, $c2, $c3, $c4);
 
-    echo "<pre>";
-    print_r($dataNormalisasi);
-    echo "</pre>";
+    // echo "<pre>";
+    // print_r($dataNormalisasi);
+    // echo "</pre>";
+
     $cc1 = 0;
     $arrs = [];
 
@@ -134,9 +137,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    echo "<pre>";
-    print_r($arrs);
-    echo "</pre>";
+    // echo "<pre>";
+    // print_r($arrs);
+    // echo "</pre>";
 
 
     for ($i = 0; $i < count($arrs); $i++) {
@@ -147,15 +150,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($_c4 == 'cost' && $j == 3) {
                 $arrs[$i][$j] = ($arrs[$i][$j] == 5) ? 1 : (($arrs[$i][$j] == 4) ? 2 : (($arrs[$i][$j] == 3) ? 3 : (($arrs[$i][$j] == 2) ? 4 : (($arrs[$i][$j] == 1) ? 5 : 0))));
             }
-            echo $arrs[$i][$j];
+            // echo $arrs[$i][$j];
         }
-        echo "<br>";
+        // echo "<br>";
     }
 
 
-    echo "<pre>";
-    print_r($arrs);
-    echo "</pre>";
+    // echo "<pre>";
+    // print_r($arrs);
+    // echo "</pre>";
 
     // Inisialisasi array untuk menyimpan hasil penjumlahan
     $hasil = array();
@@ -169,26 +172,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    // Menampilkan hasil
-    for ($i = 0; $i < count($hasil); $i++) {
-        for ($j = 0; $j < count($hasil[$i]); $j++) {
-            echo "array[$i][$j] = " . $hasil[$i][$j] . "<br>";
-        }
-    }
+    // // Menampilkan hasil
+    // for ($i = 0; $i < count($hasil); $i++) {
+    //     for ($j = 0; $j < count($hasil[$i]); $j++) {
+    //         echo "array[$i][$j] = " . $hasil[$i][$j] . "<br>";
+    //     }
+    // }
 
     $y = array();
 
     // Loop untuk menghitung nilai y
     for ($i = 0; $i < count($hasil); $i++) {
-        $y[$i] = ($hasil[$i][0] + $hasil[$i][1]) - ($hasil[$i][2] + $hasil[$i][3]);
+        if($_c3 == 'cost' && $_c4 == 'cost'){
+             $y[$i] = ($hasil[$i][0] + $hasil[$i][1]) - ($hasil[$i][2] + $hasil[$i][3]);
+        }elseif($_c3 == 'cost' && $_c4 == 'benefit'){
+            $y[$i] = ($hasil[$i][0] + $hasil[$i][1] + $hasil[$i][3]) - ($hasil[$i][2]);
+        }elseif($_c4 == 'cost' && $_c3 == 'benefit'){
+            $y[$i] = ($hasil[$i][0] + $hasil[$i][1] + $hasil[$i][2]) - ($hasil[$i][3]);
+        }else{
+            $y[$i] = ($hasil[$i][0] + $hasil[$i][1] + $hasil[$i][2] + $hasil[$i][3]);
+        }
     }
 
-    // Menampilkan hasil y
-    for ($i = 0; $i < count($y); $i++) {
-        echo "y[$i] = " . $y[$i] . "<br>";
-    }
+    // // Menampilkan hasil y
+    // for ($i = 0; $i < count($y); $i++) {
+    //     echo "y[$i] = " . $y[$i] . "<br>";
+    // }
 
-    $arrBaru = [];
+    
     foreach ($dataNormalisasi as $key => $value) {
         $arrBaru[] = array(
             "id_alternatif" => $value['id_alternatif'],
@@ -196,6 +207,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             "umur" => $value['umur'],
             "harga" => $value['harga'],
             "gambar" => $value['gambar'],
+            "nama_C1" => $value['nama_C1'],
+            "nama_C2" => $value['nama_C2'],
             "C1" => $value['C1'],
             "C2" => $value['C2'],
             "C3" => $value['C3'],
@@ -204,9 +217,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         );
     }
 
-    echo "<pre>";
-    print_r($arrBaru);
-    echo "</pre>";
+    // echo "<pre>";
+    // print_r($arrBaru);
+    // echo "</pre>";
     // Fungsi untuk mengurutkan array berdasarkan nilai preferensi tertinggi ke terendah
     usort($arrBaru, function ($a, $b) {
         if ($a['preferensi'] == $b['preferensi']) {
@@ -216,10 +229,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     });
 
     // Menampilkan hasil pengurutan
-    echo "<pre>";
-    print_r($arrBaru);
-    echo "</pre>";
-    die;
+    // echo "<pre>";
+    // print_r($arrBaru);
+    // echo "</pre>";
+    // die;
     // $dataPreferensiLimOne = $getDataHasil->getDataPreferensiLimOne($c1,$c2,$c3,$c4);
     // // $simpanRiwayat = $getDataHasil->simpanRiwayat($dataPreferensiLimOne['id_alternatif'],$c1,$c2,$c3,$c4);
     $post = true;
@@ -239,59 +252,60 @@ $increament = 0;
 $urut = 0;
 ?>
 <?php if (isset($_SESSION['success'])) : ?>
-    <script>
-        var successfuly = '<?php echo $_SESSION["success"]; ?>';
-        Swal.fire({
-            title: 'Sukses!',
-            text: successfuly,
-            icon: 'success',
-            confirmButtonText: 'OK'
-        }).then(function(result) {
-            if (result.isConfirmed) {
-                window.location.href = '';
-            }
-        });
-    </script>
-    <?php unset($_SESSION['success']); // Menghapus session setelah ditampilkan 
+<script>
+var successfuly = '<?php echo $_SESSION["success"]; ?>';
+Swal.fire({
+    title: 'Sukses!',
+    text: successfuly,
+    icon: 'success',
+    confirmButtonText: 'OK'
+}).then(function(result) {
+    if (result.isConfirmed) {
+        window.location.href = '';
+    }
+});
+</script>
+<?php unset($_SESSION['success']); // Menghapus session setelah ditampilkan 
     ?>
 <?php endif; ?>
 <?php if (isset($_SESSION['error'])) : ?>
-    <script>
-        Swal.fire({
-            title: 'Error!',
-            text: '<?php echo $_SESSION['error']; ?>',
-            icon: 'error',
-            confirmButtonText: 'OK'
-        }).then(function(result) {
-            if (result.isConfirmed) {
-                window.location.href = '';
-            }
-        });
-    </script>
-    <?php unset($_SESSION['error']); // Menghapus session setelah ditampilkan 
+<script>
+Swal.fire({
+    title: 'Error!',
+    text: '<?php echo $_SESSION['error']; ?>',
+    icon: 'error',
+    confirmButtonText: 'OK'
+}).then(function(result) {
+    if (result.isConfirmed) {
+        window.location.href = '';
+    }
+});
+</script>
+<?php unset($_SESSION['error']); // Menghapus session setelah ditampilkan 
     ?>
 <?php endif; ?>
 <style>
-    table {
-        font-size: 10pt;
-    }
+table {
+    font-size: 10pt;
+}
 
-    ol {
-        text-align: start;
-    }
+ol {
+    text-align: start;
+}
 </style>
 </style>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        let button_like_link = document.getElementById('btn-like-link');
+document.addEventListener('DOMContentLoaded', function() {
+    let button_like_link = document.getElementById('btn-like-link');
 
-        button_like_link.addEventListener('click', function() {
-            Swal.fire({
-                title: 'Panduan',
-                text: 'Langkah-langkah pengisian form perbandingan kriteria:',
-                icon: 'warning',
-                html: `
+    button_like_link.addEventListener('click', function() {
+        Swal.fire({
+            title: 'Panduan',
+            text: 'Langkah-langkah pengisian form perbandingan kriteria:',
+            icon: 'warning',
+            html: `
             <ol>
+                <li>Jawab pertanyaan 1 dan 2 dengan jawaban 'Ya' atau 'Tidak'</li>
                 <li>Pilih Kriteria yang lebih penting</li>
                 <li>Masukkan Nilai perbandingannya berdasarkan tabel berikut:</li>
                 <table class="table nowrap">
@@ -315,11 +329,11 @@ $urut = 0;
                 <li>Klik tombol submit</li>
             </ol>
         `,
-                confirmButtonText: 'Paham'
-            });
-
+            confirmButtonText: 'Paham'
         });
+
     });
+});
 </script>
 <div class="container mb-5" style="font-family: 'Prompt', sans-serif;">
     <div class="row">
@@ -329,8 +343,7 @@ $urut = 0;
                     <h4 class="alert-heading text-center">PANDUAN</h4>
                     <ul>
                         <li>
-                            <p>Model perengkingan dari sistem ini menggunakan form perbandingan kriteria/spesifikasi
-                                laptop,
+                            <p>Model perengkingan dari sistem ini menggunakan form perbandingan kriteria,
                                 sehingga anda perlu mengisi form perbandingan tersebut. Namun sebelum mengisi form
                                 perbandingan, diharapkan membaca panduan pengisian form terlebih dahulu.</p>
                         </li>
@@ -342,9 +355,12 @@ $urut = 0;
                         </li>
                         <hr>
                         <div class="d-flex">
-                            <button type="button" id="btn-like-link" class="button-like-link me-2 btn btn-primary mb-4 d-flex justify-content-end"><small class="">Baca
+                            <button type="button" id="btn-like-link"
+                                class="button-like-link me-2 btn btn-primary mb-4 d-flex justify-content-end"><small
+                                    class="">Baca
                                     Panduan</small></button>
-                            <button type="button" data-bs-toggle="modal" data-bs-target="#isi-form" class="btn btn-secondary mb-4 d-flex justify-content-end"><small class="">Isi
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#isi-form"
+                                class="btn btn-secondary mb-4 d-flex justify-content-end"><small class="">Isi
                                     Form</small></button>
                         </div>
                     </ul>
@@ -353,7 +369,8 @@ $urut = 0;
                     <div class="card-header">HASIL PREFERENSI</div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered nowrap" style="width:100%" id="table-penilaian">
+                            <table class="table table-striped table-bordered nowrap" style="width:100%"
+                                id="table-penilaian">
                                 <thead>
                                     <tr>
                                         <th scope="col">No</th>
@@ -363,29 +380,27 @@ $urut = 0;
                                         <th scope="col">Kelas Keawetan</th>
                                         <th scope="col">Umur</th>
                                         <th scope="col">Harga</th>
-                                        <th scope="col">Aksi</th>
+                                        <th scope="col">Preferensi</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-group-divider">
-                                    <?php foreach ($dataAlternatif as $i => $alternatif) : ?>
-                                        <tr>
-                                            <th scope="row"><?= $i + 1; ?></th>
-                                            <td><a href="../user_area/gambar/<?= $alternatif['gambar'] == '-' ? 'no-img.png' : $alternatif['gambar']; ?>" data-lightbox="image-1" data-title="<?= $alternatif['nama_alternatif']; ?>"><img style="width:100px; height:100px;" src="../user_area/gambar/<?= $alternatif['gambar'] == '-' ? 'no-img.png' : $alternatif['gambar']; ?>" alt=""></a>
-                                            </td>
-                                            <td><?= $alternatif['nama_alternatif']; ?></td>
-                                            <td><?= $alternatif['nama_C1']; ?></td>
-                                            <td><?= $alternatif['nama_C2']; ?></td>
-                                            <td><?= $alternatif['umur']; ?> Tahun</td>
-                                            <td><?= $alternatif['harga']; ?></td>
-                                            <td>
-                                                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#edit<?= $alternatif['id_alternatif']; ?>">
-                                                    Edit
-                                                </button>
-                                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#hapus<?= $alternatif['id_alternatif']; ?>">
-                                                    Hapus
-                                                </button>
-                                            </td>
-                                        </tr>
+                                    <?php foreach ($arrBaru as $i => $alternatif) : ?>
+                                    <tr>
+                                        <th scope="row"><?= $i + 1; ?></th>
+                                        <td><a href="../user_area/gambar/<?= $alternatif['gambar'] == '-' ? 'no-img.png' : $alternatif['gambar']; ?>"
+                                                data-lightbox="image-1"
+                                                data-title="<?= $alternatif['nama_alternatif']; ?>"><img
+                                                    style="width:100px; height:100px;"
+                                                    src="../user_area/gambar/<?= $alternatif['gambar'] == '-' ? 'no-img.png' : $alternatif['gambar']; ?>"
+                                                    alt=""></a>
+                                        </td>
+                                        <td><?= $alternatif['nama_alternatif']; ?></td>
+                                        <td><?= $alternatif['nama_C1']; ?></td>
+                                        <td><?= $alternatif['nama_C2']; ?></td>
+                                        <td><?= $alternatif['umur']; ?> Tahun</td>
+                                        <td><?= "Rp".number_format($alternatif['harga'],2,",","."); ?></td>
+                                        <td><?= !isset($alternatif['preferensi'])?0:$alternatif['preferensi']; ?></td>
+                                    </tr>
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
@@ -409,6 +424,28 @@ $urut = 0;
                 <div class="modal-body">
                     <div class="card-body shadow-lg d-flex justify-content-center py-5 px-md-5">
                         <div class="container">
+                            <ol>
+                                <li><strong>Apakah anda lebih menyukai kayu yang umurnya lebih muda?</strong></li>
+                                <input class="form-check-input" type="radio" required name="ket_umur" id="ya" value="1">
+                                <label class="form-check-label" for="ya">
+                                    Ya
+                                </label><br>
+                                <input class="form-check-input" type="radio" required name="ket_umur" id="tidak"
+                                    value="0">
+                                <label class="form-check-label" for="tidak">
+                                    Tidak
+                                </label>
+
+                                <li><strong>Apakah anda lebih menyukai kayu yang harganya lebih murah?</strong></li>
+                                <input class="form-check-input" type="radio" required name="ket_harga" id="y" value="1">
+                                <label class="form-check-label" for="y">
+                                    Ya
+                                </label><br>
+                                <input class="form-check-input" type="radio" required name="ket_harga" id="t" value="0">
+                                <label class="form-check-label" for="t">
+                                    Tidak
+                                </label>
+                            </ol>
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -419,32 +456,36 @@ $urut = 0;
                                 </thead>
                                 <tbody>
                                     <?php for ($i = 0; $i <= (count($array) - 2); $i++) : ?>
-                                        <?php for ($j = ($i + 1); $j <= (count($array) - 1); $j++) : ?>
-                                            <?php $k++; ?>
-                                            <tr>
-                                                <td>
-                                                    <div class="form-check me-3">
-                                                        <input class="form-check-input" type="radio" name="opsi<?= $k ?>" id="flexRadioDefault<?= $k ?>" value="1">
-                                                        <label class="form-check-label" for="flexRadioDefault<?= $k ?>">
-                                                            <?= $array[$i]; ?>
-                                                        </label>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="opsi<?= $k ?>" value="2" id="flexRadioDefaults<?= $k ?>">
-                                                        <label class="form-check-label" for="flexRadioDefaults<?= $k ?>">
-                                                            <?= $array[$j]; ?>
-                                                        </label>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="mb-3">
-                                                        <input class="form-control" type="number" placeholder="0" name="bobot<?php echo $k; ?>" value="<?php echo $nilai ?>" max="9" required>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        <?php endfor; ?>
+                                    <?php for ($j = ($i + 1); $j <= (count($array) - 1); $j++) : ?>
+                                    <?php $k++; ?>
+                                    <tr>
+                                        <td>
+                                            <div class="form-check me-3">
+                                                <input class="form-check-input" required type="radio"
+                                                    name="opsi<?= $k ?>" id="flexRadioDefault<?= $k ?>" value="1">
+                                                <label class="form-check-label" for="flexRadioDefault<?= $k ?>">
+                                                    <?= $array[$i]; ?>
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-check">
+                                                <input class="form-check-input" required type="radio"
+                                                    name="opsi<?= $k ?>" value="2" id="flexRadioDefaults<?= $k ?>">
+                                                <label class="form-check-label" for="flexRadioDefaults<?= $k ?>">
+                                                    <?= $array[$j]; ?>
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="mb-3">
+                                                <input class="form-control" type="number" placeholder="0"
+                                                    name="bobot<?php echo $k; ?>" value="<?php echo $nilai ?>" max="9"
+                                                    required>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <?php endfor; ?>
                                     <?php endfor; ?>
                                 </tbody>
                             </table>
