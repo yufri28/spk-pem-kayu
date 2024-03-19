@@ -28,7 +28,7 @@ $array = array();
 // init k
 $k = 0;
 
-$_c3 = "cost";
+$_c3 = "benefit";
 $_c4 = "cost";
 
 $data = $koneksi->query("SELECT * FROM kriteria ORDER BY id_kriteria");
@@ -133,6 +133,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
     }
+
+    echo "<pre>";
+    print_r($arrs);
+    echo "</pre>";
+
+
+    for ($i = 0; $i < count($arrs); $i++) {
+        for ($j = 0; $j < count($arrs[$i]); $j++) {
+            if ($_c3 == 'cost' && $j == 2) {
+                $arrs[$i][$j] = ($arrs[$i][$j] == 5) ? 1 : (($arrs[$i][$j] == 4) ? 2 : (($arrs[$i][$j] == 3) ? 3 : (($arrs[$i][$j] == 2) ? 4 : (($arrs[$i][$j] == 1) ? 5 : 0))));
+            }
+            if ($_c4 == 'cost' && $j == 3) {
+                $arrs[$i][$j] = ($arrs[$i][$j] == 5) ? 1 : (($arrs[$i][$j] == 4) ? 2 : (($arrs[$i][$j] == 3) ? 3 : (($arrs[$i][$j] == 2) ? 4 : (($arrs[$i][$j] == 1) ? 5 : 0))));
+            }
+            echo $arrs[$i][$j];
+        }
+        echo "<br>";
+    }
+
 
     echo "<pre>";
     print_r($arrs);
