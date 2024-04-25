@@ -1,3 +1,6 @@
+<?php 
+session_start();
+?>
 <!DOCTYPE html>
 <html>
 
@@ -28,8 +31,13 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
+                        <?php if(!isset($_SESSION['login'])):?>
                         <a class="btn btn-md btn-primary py-2 px-4 me-5" style="background-color:#7E2553; border: 0px"
                             href="./auth/login.php">Login</a>
+                        <?php else:?>
+                        <a class="btn btn-md btn-primary py-2 px-4 me-5" style="background-color:#7E2553; border: 0px"
+                            href="./auth/logout.php">Logout</a>
+                        <?php endif;?>
                     </li>
                 </ul>
             </div>

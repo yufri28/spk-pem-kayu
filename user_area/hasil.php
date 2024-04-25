@@ -386,7 +386,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <tbody class="table-group-divider">
                                     <?php foreach ($arrBaru as $i => $alternatif) : ?>
                                     <tr>
-                                        <th scope="row"><?= $i + 1; ?></th>
+                                        <th scope="row"><?= ($i + 1); ?></th>
                                         <td><a href="../user_area/gambar/<?= $alternatif['gambar'] == '-' ? 'no-img.png' : $alternatif['gambar']; ?>"
                                                 data-lightbox="image-1"
                                                 data-title="<?= $alternatif['nama_alternatif']; ?>"><img
