@@ -250,6 +250,7 @@ $array_skala = [
 
 $increament = 0;
 $urut = 0;
+$nilai = 0;
 ?>
 <?php if (isset($_SESSION['success'])) : ?>
 <script>
