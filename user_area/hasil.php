@@ -209,6 +209,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             "gambar" => $value['gambar'],
             "nama_C1" => $value['nama_C1'],
             "nama_C2" => $value['nama_C2'],
+            "nama_mebel" => $value['nama_mebel'],
+            "latitude" => $value['latitude'],
+            "longitude" => $value['longitude'],
             "C1" => $value['C1'],
             "C2" => $value['C2'],
             "C3" => $value['C3'],
@@ -381,7 +384,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                         <th scope="col">Kelas Keawetan</th>
                                         <th scope="col">Umur</th>
                                         <th scope="col">Harga</th>
-                                        <th scope="col">Preferensi</th>
+                                        <th scope="col">Lokasi Mebel</th>
+                                        <!-- <th scope="col">Preferensi</th> -->
                                     </tr>
                                 </thead>
                                 <tbody class="table-group-divider">
@@ -400,7 +404,14 @@ document.addEventListener('DOMContentLoaded', function() {
                                         <td><?= $alternatif['nama_C2']; ?></td>
                                         <td><?= $alternatif['umur']; ?> Tahun</td>
                                         <td><?= "Rp".number_format($alternatif['harga'],2,",","."); ?></td>
-                                        <td><?= !isset($alternatif['preferensi'])?0:$alternatif['preferensi']; ?></td>
+                                        <td>
+                                            <a target="_blank"
+                                                href="https://www.google.com/maps/dir/?api=1&destination=<?=$alternatif['latitude'];?>,<?=$alternatif['longitude'];?>"
+                                                class="btn btn-sm btn-success <?=$alternatif['latitude'] == '' && $alternatif['longitude'] == ''?'disabled':'';?>">
+                                                Lokasi
+                                            </a>
+                                        </td>
+                                        <!-- <td><?= !isset($alternatif['preferensi'])?0:$alternatif['preferensi']; ?></td> -->
                                     </tr>
                                     <?php endforeach; ?>
                                 </tbody>

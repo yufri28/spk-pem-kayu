@@ -14,7 +14,7 @@ class Alternatif
     public function getDataAlternatif()
     {
         // return $this->db->query("SELECT * FROM alternatif");
-        return $this->db->query("SELECT a.nama_alternatif, a.id_alternatif, a.umur, a.harga, a.gambar,
+        return $this->db->query("SELECT a.nama_alternatif, a.id_alternatif, a.umur, a.harga, a.gambar, a.nama_mebel, a.latitude, a.longitude,
                 MAX(CASE WHEN k.id_kriteria = 'C1' THEN kak.id_alt_kriteria END) AS id_alt_C1,
                 MIN(CASE WHEN k.id_kriteria = 'C2' THEN kak.id_alt_kriteria END) AS id_alt_C2,
                 MIN(CASE WHEN k.id_kriteria = 'C3' THEN kak.id_alt_kriteria END) AS id_alt_C3,
@@ -36,12 +36,13 @@ class Alternatif
 
     public function tambahAlternatif($dataAlternatif, $dataSubKriteria)
     {
+        
         $cekData = $this->db->query("SELECT * FROM `alternatif` WHERE LOWER(nama_alternatif) = '" . strtolower($dataAlternatif['nama_alternatif']) . "'");
         if ($cekData->num_rows > 0) {
             return $_SESSION['error'] = 'Data sudah ada!';
         } else {
-            $stmtInsertAlt = $this->db->prepare("INSERT INTO alternatif(nama_alternatif, umur, harga, gambar) VALUES (?,?,?,?)");
-            $stmtInsertAlt->bind_param("siis", $dataAlternatif['nama_alternatif'], $dataAlternatif['umur'], $dataAlternatif['harga'], $dataAlternatif['gambar']);
+            $stmtInsertAlt = $this->db->prepare("INSERT INTO alternatif(nama_alternatif, umur, harga, gambar, nama_mebel, latitude, longitude) VALUES (?,?,?,?,?,?,?)");
+            $stmtInsertAlt->bind_param("siissss", $dataAlternatif['nama_alternatif'], $dataAlternatif['umur'], $dataAlternatif['harga'], $dataAlternatif['gambar'], $dataAlternatif['nama_mebel'], $dataAlternatif['latitude'], $dataAlternatif['longitude']);
             $stmtInsertAlt->execute();
             $getId = $this->db->query("SELECT id_alternatif FROM `alternatif` WHERE nama_alternatif = '" . $dataAlternatif['nama_alternatif'] . "'");
             $fetchId = mysqli_fetch_assoc($getId);
@@ -64,7 +65,7 @@ class Alternatif
         // $stmtUpdateAlt = $this->db->prepare("UPDATE alternatif SET nama_alternatif=?, alamat=?, latitude=?, longitude=? WHERE id_alternatif=?");
         // $stmtUpdateAlt->bind_param("ssssi", $dataAlternatif['nama_alternatif'], $dataAlternatif['alamat'], $dataAlternatif['latitude'], $dataAlternatif['longitude'], $dataAlternatif['id_alternatif']);
         // $stmtUpdateAlt->execute();
-        $query = "UPDATE alternatif SET nama_alternatif='" . $dataAlternatif['nama_alternatif'] . "', umur='" . $dataAlternatif['umur'] . "' , harga='" . $dataAlternatif['harga'] . "', gambar='" . $dataAlternatif['gambar'] . "' WHERE id_alternatif=" . $dataAlternatif['id_alternatif'];
+        $query = "UPDATE alternatif SET nama_alternatif='" . $dataAlternatif['nama_alternatif'] . "', umur='" . $dataAlternatif['umur'] . "' , harga='" . $dataAlternatif['harga'] . "', gambar='" . $dataAlternatif['gambar'] . "', nama_mebel='" . $dataAlternatif['nama_mebel'] . "', latitude='" . $dataAlternatif['latitude'] . "', longitude='" . $dataAlternatif['longitude'] . "' WHERE id_alternatif=" . $dataAlternatif['id_alternatif'];
         $stmtUpdateAlt = $this->db->query($query);
 
         if ($stmtUpdateAlt) {

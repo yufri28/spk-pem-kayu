@@ -14,7 +14,7 @@
         {
             $c_3 = 'Cost';
             $c_4 = 'Cost';
-            return $this->db->query("SELECT a.nama_alternatif, a.id_alternatif, a.umur, a.harga, a.gambar,
+            return $this->db->query("SELECT a.nama_alternatif, a.id_alternatif, a.umur, a.harga, a.gambar, a.nama_mebel, a.latitude, a.longitude,
                 MAX(CASE WHEN k.id_kriteria = 'C1' THEN sk.bobot_sub_kriteria END) AS C1,
                 MAX(CASE WHEN k.id_kriteria = 'C2' THEN sk.bobot_sub_kriteria END) AS C2,
                 MAX(CASE WHEN k.id_kriteria = 'C3' THEN sk.bobot_sub_kriteria END) AS C3,
@@ -65,7 +65,7 @@
         
         public function getDataPreferensiLimOne($c1=0,$c2=0,$c3=0,$c4=0,$c5=0,$c6=0,$c7=0,$c8=0)
         {
-            return $this->db->query("SELECT a.nama_alternatif, a.id_alternatif, a.gambar, a.f_id_kategori, ka.nama_kategori,
+            return $this->db->query("SELECT a.nama_alternatif, a.id_alternatif, a.gambar, a.f_id_kategori, ka.nama_kategori, a.nama_mebel, a.latitude, a.longitude,
             MAX(CASE WHEN k.id_kriteria = 'C1' THEN sk.nama_sub_kriteria END) AS nama_C1,
             MAX(CASE WHEN k.id_kriteria = 'C2' THEN sk.nama_sub_kriteria END) AS nama_C2,
             MAX(CASE WHEN k.id_kriteria = 'C3' THEN sk.nama_sub_kriteria END) AS nama_C3,

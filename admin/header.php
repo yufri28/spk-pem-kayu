@@ -32,6 +32,11 @@ if (!isset($_SESSION['login']) && $_SESSION['login'] != true) {
     .teks {
         height: 60vh;
     }
+
+    a.disabled {
+        pointer-events: none;
+        cursor: default;
+    }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
 </head>

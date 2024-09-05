@@ -14,7 +14,7 @@ class Alternatif
     public function getDataAlternatif()
     {
         // return $this->db->query("SELECT * FROM alternatif");
-        return $this->db->query("SELECT a.nama_alternatif, a.id_alternatif, a.umur, a.harga, a.gambar,
+        return $this->db->query("SELECT a.nama_alternatif, a.id_alternatif, a.umur, a.harga, a.gambar, a.nama_mebel, a.latitude, a.longitude,
                 MAX(CASE WHEN k.id_kriteria = 'C1' THEN kak.id_alt_kriteria END) AS id_alt_C1,
                 MIN(CASE WHEN k.id_kriteria = 'C2' THEN kak.id_alt_kriteria END) AS id_alt_C2,
                 MIN(CASE WHEN k.id_kriteria = 'C3' THEN kak.id_alt_kriteria END) AS id_alt_C3,

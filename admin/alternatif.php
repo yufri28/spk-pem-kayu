@@ -50,6 +50,9 @@ if (isset($_POST['simpan'])) {
             $namaAlternatif = htmlspecialchars($_POST['nama_alternatif']);
             $sifat_mekanik = htmlspecialchars($_POST['sifat_mekanik']);
             $kelas_keawetan = htmlspecialchars($_POST['kelas_keawetan']);
+            $nama_mebel = htmlspecialchars($_POST['nama_mebel']);
+            $latitude = htmlspecialchars($_POST['latitude']);
+            $longitude = htmlspecialchars($_POST['longitude']);
 
             // umur
             $umur = htmlspecialchars($_POST['umur']);
@@ -90,7 +93,10 @@ if (isset($_POST['simpan'])) {
                 'harga' => $harga,
                 'umur' => $umur,
                 'kelas_keawetan' => $kelas_keawetan,
-                'gambar' => $namaFile
+                'gambar' => $namaFile,
+                'nama_mebel' => $nama_mebel,
+                'latitude' => $latitude,
+                'longitude' => $longitude
             ];
 
             $dataSubKriteria = [
@@ -146,6 +152,9 @@ if (isset($_POST['edit'])) {
             $namaAlternatif = htmlspecialchars($_POST['nama_alternatif']);
             $sifat_mekanik = htmlspecialchars($_POST['sifat_mekanik']);
             $kelas_keawetan = htmlspecialchars($_POST['kelas_keawetan']);
+            $nama_mebel = htmlspecialchars($_POST['nama_mebel']);
+            $latitude = htmlspecialchars($_POST['latitude']);
+            $longitude = htmlspecialchars($_POST['longitude']);
 
             // Hapus gambar lama jika ada
             if (isset($_POST["gambar_lama"])) {
@@ -196,7 +205,10 @@ if (isset($_POST['edit'])) {
                 'harga' => $harga,
                 'umur' => $umur,
                 'kelas_keawetan' => $kelas_keawetan,
-                'gambar' => $namaFile
+                'gambar' => $namaFile,
+                'nama_mebel' => $nama_mebel,
+                'latitude' => $latitude,
+                'longitude' => $longitude
             ];
 
             $dataSubKriteria = [$sifat_mekanik, $kelas_keawetan, $umurId, $hargaId];
@@ -210,6 +222,9 @@ if (isset($_POST['edit'])) {
         $sifat_mekanik = htmlspecialchars($_POST['sifat_mekanik']);
         $kelas_keawetan = htmlspecialchars($_POST['kelas_keawetan']);
         $namaFile = htmlspecialchars($_POST['gambar_lama']);
+        $nama_mebel = htmlspecialchars($_POST['nama_mebel']);
+        $latitude = htmlspecialchars($_POST['latitude']);
+        $longitude = htmlspecialchars($_POST['longitude']);
 
         // umur
         $umur = htmlspecialchars($_POST['umur']);
@@ -251,7 +266,10 @@ if (isset($_POST['edit'])) {
             'harga' => $harga,
             'umur' => $umur,
             'kelas_keawetan' => $kelas_keawetan,
-            'gambar' => $namaFile
+            'gambar' => $namaFile,
+            'nama_mebel' => $nama_mebel,
+            'latitude' => $latitude,
+            'longitude' => $longitude
         ];
 
         $dataSubKriteria = [$sifat_mekanik, $kelas_keawetan, $umurId, $hargaId];
@@ -365,7 +383,21 @@ Swal.fire({
                                 <input type="file" accept=".jpg,.jpeg,.png" class="form-control" name="gambar"
                                     id="gambar" required />
                             </div>
-
+                            <div class="mb-3 mt-3">
+                                <label for="nama_mebel" class="form-label">Nama Mebel</label>
+                                <input type="text" name="nama_mebel" class="form-control" id="nama_mebel" required
+                                    placeholder="Nama Mebel" />
+                            </div>
+                            <div class="mb-3 mt-3">
+                                <label for="latitude" class="form-label">Latitude</label>
+                                <input type="text" name="latitude" class="form-control" id="latitude" required
+                                    placeholder="Latitude" />
+                            </div>
+                            <div class="mb-3 mt-3">
+                                <label for="longitude" class="form-label">Longitude</label>
+                                <input type="text" name="longitude" class="form-control" id="longitude" required
+                                    placeholder="Longitude" />
+                            </div>
                             <button type="submit" name="simpan" class="btn col-12 btn-outline-secondary">
                                 Simpan
                             </button>
@@ -409,6 +441,11 @@ Swal.fire({
                                         <td><?= $alternatif['umur']; ?> Tahun</td>
                                         <td><?= $alternatif['harga']; ?></td>
                                         <td>
+                                            <a target="_blank"
+                                                href="https://www.google.com/maps/dir/?api=1&destination=<?=$alternatif['latitude'];?>,<?=$alternatif['longitude'];?>"
+                                                class="btn btn-sm btn-success <?=$alternatif['latitude'] == '' && $alternatif['longitude'] == ''?'disabled':'';?>">
+                                                Lokasi
+                                            </a>
                                             <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                                 data-bs-target="#edit<?= $alternatif['id_alternatif']; ?>">
                                                 Edit
@@ -417,6 +454,7 @@ Swal.fire({
                                                 data-bs-target="#hapus<?= $alternatif['id_alternatif']; ?>">
                                                 Hapus
                                             </button>
+
                                         </td>
                                     </tr>
                                     <?php endforeach; ?>
@@ -506,6 +544,21 @@ Swal.fire({
                                 src="../user_area/gambar/<?= $alternatif['gambar']; ?>" alt="">
                             <?php endif; ?>
                         </div>
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <label for="nama_mebel" class="form-label">Nama Mebel</label>
+                        <input type="text" name="nama_mebel" value="<?=$alternatif['nama_mebel'];?>"
+                            class="form-control" id="nama_mebel" required placeholder="Nama Mebel" />
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <label for="latitude" class="form-label">Latitude</label>
+                        <input type="text" name="latitude" value="<?=$alternatif['latitude'];?>" class="form-control"
+                            id="latitude" required placeholder="Latitude" />
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <label for="longitude" class="form-label">Longitude</label>
+                        <input type="text" name="longitude" value="<?=$alternatif['longitude'];?>" class="form-control"
+                            id="longitude" required placeholder="Longitude" />
                     </div>
                 </div>
                 <div class="modal-footer">

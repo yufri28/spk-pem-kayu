@@ -116,7 +116,6 @@ Swal.fire({
                                     </tr>
                                 </thead>
                                 <tbody class="table-group-divider">
-
                                     <?php foreach ($data_Kriteria as $key => $kriteria) : ?>
                                     <tr>
                                         <th scope="row"><?= $key + 1; ?></th>
