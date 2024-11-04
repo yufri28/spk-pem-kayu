@@ -421,6 +421,7 @@ Swal.fire({
                                         <th scope="col">Kelas Keawetan</th>
                                         <th scope="col">Umur</th>
                                         <th scope="col">Harga</th>
+                                        <th scope="col">Nama Mebel</th>
                                         <th scope="col">Aksi</th>
                                     </tr>
                                 </thead>
@@ -440,6 +441,7 @@ Swal.fire({
                                         <td><?= $alternatif['nama_C2']; ?></td>
                                         <td><?= $alternatif['umur']; ?> Tahun</td>
                                         <td><?= $alternatif['harga']; ?></td>
+                                        <td><?= $alternatif['nama_mebel']; ?></td>
                                         <td>
                                             <a target="_blank"
                                                 href="https://www.google.com/maps/dir/?api=1&destination=<?=$alternatif['latitude'];?>,<?=$alternatif['longitude'];?>"

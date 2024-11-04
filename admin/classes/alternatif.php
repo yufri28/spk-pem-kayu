@@ -31,20 +31,20 @@ class Alternatif
                 JOIN kecocokan_alt_kriteria kak ON a.id_alternatif = kak.f_id_alternatif
                 JOIN sub_kriteria sk ON kak.f_id_sub_kriteria = sk.id_sub_kriteria
                 JOIN kriteria k ON kak.f_id_kriteria = k.id_kriteria
-                GROUP BY a.nama_alternatif ORDER BY a.id_alternatif DESC;");
+                GROUP BY a.id_alternatif ORDER BY a.id_alternatif DESC;");
     }
 
     public function tambahAlternatif($dataAlternatif, $dataSubKriteria)
     {
         
-        $cekData = $this->db->query("SELECT * FROM `alternatif` WHERE LOWER(nama_alternatif) = '" . strtolower($dataAlternatif['nama_alternatif']) . "'");
+        $cekData = $this->db->query("SELECT * FROM `alternatif` WHERE LOWER(nama_alternatif) = '" . strtolower($dataAlternatif['nama_alternatif']) . "' AND LOWER(nama_mebel) = '" . strtolower($dataAlternatif['nama_mebel']) . "'");
         if ($cekData->num_rows > 0) {
             return $_SESSION['error'] = 'Data sudah ada!';
         } else {
             $stmtInsertAlt = $this->db->prepare("INSERT INTO alternatif(nama_alternatif, umur, harga, gambar, nama_mebel, latitude, longitude) VALUES (?,?,?,?,?,?,?)");
             $stmtInsertAlt->bind_param("siissss", $dataAlternatif['nama_alternatif'], $dataAlternatif['umur'], $dataAlternatif['harga'], $dataAlternatif['gambar'], $dataAlternatif['nama_mebel'], $dataAlternatif['latitude'], $dataAlternatif['longitude']);
             $stmtInsertAlt->execute();
-            $getId = $this->db->query("SELECT id_alternatif FROM `alternatif` WHERE nama_alternatif = '" . $dataAlternatif['nama_alternatif'] . "'");
+            $getId = $this->db->query("SELECT id_alternatif FROM `alternatif` WHERE nama_alternatif = '" . $dataAlternatif['nama_alternatif'] . "' AND nama_mebel = '" . $dataAlternatif['nama_mebel'] . "'");
             $fetchId = mysqli_fetch_assoc($getId);
             foreach ($dataSubKriteria as $key => $id_sub_kriteria) {
                 $stmtInsertKecAltKriteria = $this->db->prepare("INSERT INTO kecocokan_alt_kriteria(f_id_alternatif, f_id_kriteria, f_id_sub_kriteria) VALUES (?,?,?)");
@@ -60,6 +60,7 @@ class Alternatif
             $stmtInsertKecAltKriteria->close();
         }
     }
+    
     public function editAlternatif($dataAlternatif, $dataSubKriteria)
     {
         // $stmtUpdateAlt = $this->db->prepare("UPDATE alternatif SET nama_alternatif=?, alamat=?, latitude=?, longitude=? WHERE id_alternatif=?");
