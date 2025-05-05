@@ -14,7 +14,7 @@ class Alternatif
     public function getDataAlternatif()
     {
         // return $this->db->query("SELECT * FROM alternatif");
-        return $this->db->query("SELECT a.nama_alternatif, a.id_alternatif, a.umur, a.harga, a.gambar, a.nama_mebel, a.latitude, a.longitude,
+        return $this->db->query("SELECT a.nama_alternatif, a.id_alternatif, a.fisik, a.mekanik, a.keawetan, a.umur, a.harga, a.gambar, a.nama_mebel, a.latitude, a.longitude,
                 MAX(CASE WHEN k.id_kriteria = 'C1' THEN kak.id_alt_kriteria END) AS id_alt_C1,
                 MIN(CASE WHEN k.id_kriteria = 'C2' THEN kak.id_alt_kriteria END) AS id_alt_C2,
                 MIN(CASE WHEN k.id_kriteria = 'C3' THEN kak.id_alt_kriteria END) AS id_alt_C3,
@@ -107,23 +107,27 @@ class Alternatif
         $stmtDelete->close();
     }
 
-    public function getSubKriteriaSifatMekanik()
+    public function getSubKriteriaSifatFisik()
     {
         return $this->db->query("SELECT id_sub_kriteria, nama_sub_kriteria, bobot_sub_kriteria FROM sub_kriteria WHERE f_id_kriteria = 'C1'");
     }
-
-    public function getSubKriteriaKelasKeawetan()
+    public function getSubKriteriaSifatMekanik()
     {
         return $this->db->query("SELECT id_sub_kriteria, nama_sub_kriteria, bobot_sub_kriteria FROM sub_kriteria WHERE f_id_kriteria = 'C2'");
     }
 
-    public function getSubKriteriaUmurKayu()
+    public function getSubKriteriaKelasKeawetan()
     {
         return $this->db->query("SELECT id_sub_kriteria, nama_sub_kriteria, bobot_sub_kriteria FROM sub_kriteria WHERE f_id_kriteria = 'C3'");
     }
-    public function getSubKriteriaHargaKayu()
+
+    public function getSubKriteriaUmurKayu()
     {
         return $this->db->query("SELECT id_sub_kriteria, nama_sub_kriteria, bobot_sub_kriteria FROM sub_kriteria WHERE f_id_kriteria = 'C4'");
+    }
+    public function getSubKriteriaHargaKayu()
+    {
+        return $this->db->query("SELECT id_sub_kriteria, nama_sub_kriteria, bobot_sub_kriteria FROM sub_kriteria WHERE f_id_kriteria = 'C5'");
     }
 }
 $getDataAlternatif = new Alternatif();

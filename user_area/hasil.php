@@ -16,11 +16,13 @@ $c1 = 0;
 $c2 = 0;
 $c3 = 0;
 $c4 = 0;
+$c5 = 0;
 
 $C1_ = 0;
 $C2_ = 0;
 $C3_ = 0;
 $C4_ = 0;
+$C5_ = 0;
 
 $total_bobot = 0;
 $post = false;
@@ -28,8 +30,8 @@ $array = array();
 // init k
 $k = 0;
 
-$_c3 = "benefit";
 $_c4 = "benefit";
+$_c5 = "benefit";
 
 $data = $koneksi->query("SELECT * FROM kriteria ORDER BY id_kriteria");
 $arrBaru =  (array)$dataAlternatif;
@@ -40,8 +42,8 @@ while ($row = mysqli_fetch_assoc($data)) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $matrik = array();
     $urut     = 0;
-    $_c3 = $_POST['ket_umur'] == '1'?'cost':'benefit';
-    $_c4 = $_POST['ket_harga'] == '1'?'cost':'benefit';
+    // $_c3 = $_POST['ket_umur'] == '1'?'cost':'benefit';
+    // $_c4 = $_POST['ket_harga'] == '1'?'cost':'benefit';
 
     for ($i = 0; $i <= (count($array) - 2); $i++) {
         for ($j = ($i + 1); $j <= (count($array) - 1); $j++) {
@@ -115,10 +117,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
     $dataBobotKriteria = [
-        $c1, $c2, $c3, $c4
+        $c1, $c2, $c3, $c4, $c5
     ];
 
-    $dataNormalisasi = $getDataHasil->getDataNormalisasi($c1, $c2, $c3, $c4);
+    $dataNormalisasi = $getDataHasil->getDataNormalisasi($c1, $c2, $c3, $c4, $c5);
 
     // echo "<pre>";
     // print_r($dataNormalisasi);
@@ -130,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     foreach ($dataNormalisasi as $key => $value) {
         $inc = 1;
         for ($i = 0; $i < count($value); $i++) {
-            if ($inc < 5) {
+            if ($inc <= 5) {
                 $arrs[$key][$i] = $value['C' . $inc];
                 $inc++;
             }
@@ -144,10 +146,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     for ($i = 0; $i < count($arrs); $i++) {
         for ($j = 0; $j < count($arrs[$i]); $j++) {
-            if ($_c3 == 'cost' && $j == 2) {
+            if ($_c4 == 'cost' && $j == 2) {
                 $arrs[$i][$j] = ($arrs[$i][$j] == 5) ? 1 : (($arrs[$i][$j] == 4) ? 2 : (($arrs[$i][$j] == 3) ? 3 : (($arrs[$i][$j] == 2) ? 4 : (($arrs[$i][$j] == 1) ? 5 : 0))));
             }
-            if ($_c4 == 'cost' && $j == 3) {
+            if ($_c5 == 'cost' && $j == 3) {
                 $arrs[$i][$j] = ($arrs[$i][$j] == 5) ? 1 : (($arrs[$i][$j] == 4) ? 2 : (($arrs[$i][$j] == 3) ? 3 : (($arrs[$i][$j] == 2) ? 4 : (($arrs[$i][$j] == 1) ? 5 : 0))));
             }
             // echo $arrs[$i][$j];
@@ -183,11 +185,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Loop untuk menghitung nilai y
     for ($i = 0; $i < count($hasil); $i++) {
-        if($_c3 == 'cost' && $_c4 == 'cost'){
+        if($_c4 == 'cost' && $_c5 == 'cost'){
              $y[$i] = ($hasil[$i][0] + $hasil[$i][1]) - ($hasil[$i][2] + $hasil[$i][3]);
-        }elseif($_c3 == 'cost' && $_c4 == 'benefit'){
+        }elseif($_c4 == 'cost' && $_c5 == 'benefit'){
             $y[$i] = ($hasil[$i][0] + $hasil[$i][1] + $hasil[$i][3]) - ($hasil[$i][2]);
-        }elseif($_c4 == 'cost' && $_c3 == 'benefit'){
+        }elseif($_c5 == 'cost' && $_c4 == 'benefit'){
             $y[$i] = ($hasil[$i][0] + $hasil[$i][1] + $hasil[$i][2]) - ($hasil[$i][3]);
         }else{
             $y[$i] = ($hasil[$i][0] + $hasil[$i][1] + $hasil[$i][2] + $hasil[$i][3]);
@@ -204,6 +206,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $arrBaru[] = array(
             "id_alternatif" => $value['id_alternatif'],
             "nama_alternatif" => $value['nama_alternatif'],
+            "fisik" => $value['fisik'],
+            "mekanik" => $value['mekanik'],
+            "keawetan" => $value['keawetan'],
             "umur" => $value['umur'],
             "harga" => $value['harga'],
             "gambar" => $value['gambar'],
@@ -240,7 +245,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // // $simpanRiwayat = $getDataHasil->simpanRiwayat($dataPreferensiLimOne['id_alternatif'],$c1,$c2,$c3,$c4);
     $post = true;
 } else {
-    $dataNormalisasi = $getDataHasil->getDataNormalisasi($c1, $c2, $c3, $c4);
+    $dataNormalisasi = $getDataHasil->getDataNormalisasi($c1, $c2, $c3, $c4, $c5);
 }
 $array_skala = [
     ['nilai' => '1', 'keterangan' => 'Kedua Kriteria sama-sama penting'],
@@ -380,6 +385,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                         <th scope="col">No</th>
                                         <th scope="col">Gambar</th>
                                         <th scope="col">Nama Alternatif</th>
+                                        <th scope="col">Sifat Fisik</th>
                                         <th scope="col">Sifat Mekanik</th>
                                         <th scope="col">Kelas Keawetan</th>
                                         <th scope="col">Umur</th>
@@ -400,8 +406,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                                     alt=""></a>
                                         </td>
                                         <td><?= $alternatif['nama_alternatif']; ?></td>
-                                        <td><?= $alternatif['nama_C1']; ?></td>
-                                        <td><?= $alternatif['nama_C2']; ?></td>
+                                        <td><?= $alternatif['fisik']; ?> kg/m^3</td>
+                                        <td><?= $alternatif['mekanik']; ?> MPa</td>
+                                        <td><?= $alternatif['keawetan']; ?> tahun</td>
                                         <td><?= $alternatif['umur']; ?> Tahun</td>
                                         <td><?= "Rp".number_format($alternatif['harga'],2,",","."); ?></td>
                                         <td>
@@ -441,7 +448,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="modal-body">
                     <div class="card-body shadow-lg d-flex justify-content-center py-5 px-md-5">
                         <div class="container">
-                            <ol>
+                            <!-- <ol>
                                 <li><strong>Apakah anda lebih menyukai kayu yang umurnya lebih muda?</strong></li>
                                 <input class="form-check-input" type="radio" required name="ket_umur" id="ya" value="1">
                                 <label class="form-check-label" for="ya">
@@ -462,7 +469,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <label class="form-check-label" for="t">
                                     Tidak
                                 </label>
-                            </ol>
+                            </ol> -->
                             <table class="table">
                                 <thead>
                                     <tr>

@@ -63,7 +63,7 @@ Swal.fire({
 <div class="container pt-5" style="font-family: 'Prompt', sans-serif; margin-bottom:130px; height: 100vh;">
     <div class="row">
         <div class="d-xxl-flex">
-            <?php if (mysqli_num_rows($data_Kriteria) < 4) : ?>
+            <?php if (mysqli_num_rows($data_Kriteria) < 5) : ?>
             <div class="col-xxl-3 mb-xxl-3 mt-5">
                 <div class="card">
                     <div class="card-header">
@@ -100,7 +100,7 @@ Swal.fire({
             </div>
             <?php endif; ?>
             <div
-                class="<?= mysqli_num_rows($data_Kriteria) < 4 ? "col-xxl-9 ms-xxl-2" : "col-xxl-12 ms-xxl-2 mb-5"; ?> mt-5">
+                class="<?= mysqli_num_rows($data_Kriteria) < 5 ? "col-xxl-9 ms-xxl-2" : "col-xxl-12 ms-xxl-2 mb-5"; ?> mt-5">
                 <div class="card">
                     <div class="card-header">DAFTAR KRITERIA</div>
                     <div class="card-body">

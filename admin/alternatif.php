@@ -7,6 +7,7 @@ require_once './classes/alternatif.php';
 require_once './classes/sub_kriteria.php';
 
 $dataAlternatif = $getDataAlternatif->getDataAlternatif();
+$dataSifatFisik = $getDataAlternatif->getSubKriteriaSifatFisik();
 $dataSifatMekanik = $getDataAlternatif->getSubKriteriaSifatMekanik();
 $dataSubKelasKeawetan = $getDataAlternatif->getSubKriteriaKelasKeawetan();
 $dataSubUmurKayu = $getDataAlternatif->getSubKriteriaUmurKayu();
@@ -14,6 +15,9 @@ $dataSubHargaKayu = $getDataAlternatif->getSubKriteriaHargaKayu();
 
 $umurId = 0;
 $hargaId = 0;
+$fisikId = 0;
+$keawetanId = 0;
+$mekanikId = 0;
 if (isset($_POST['simpan'])) {
     if (isset($_FILES['gambar']) && $_FILES['gambar']['error'] === UPLOAD_ERR_OK) {
         $namaFile = $_FILES['gambar']['name'];
@@ -48,25 +52,77 @@ if (isset($_POST['simpan'])) {
         // Pindahkan file gambar dari lokasi sementara ke lokasi tujuan
         if (move_uploaded_file($lokasiSementara, $targetFilePath)) {
             $namaAlternatif = htmlspecialchars($_POST['nama_alternatif']);
-            $sifat_mekanik = htmlspecialchars($_POST['sifat_mekanik']);
-            $kelas_keawetan = htmlspecialchars($_POST['kelas_keawetan']);
+            // $sifat_fisik = htmlspecialchars($_POST['sifat_fisik']);
+            // $sifat_mekanik = htmlspecialchars($_POST['sifat_mekanik']);
+            // $kelas_keawetan = htmlspecialchars($_POST['kelas_keawetan']);
             $nama_mebel = htmlspecialchars($_POST['nama_mebel']);
             $latitude = htmlspecialchars($_POST['latitude']);
             $longitude = htmlspecialchars($_POST['longitude']);
 
+            // fisik
+            $fisik = htmlspecialchars($_POST['sifat_fisik']);
+            // $fisik_cek = htmlspecialchars($_POST['sifat_fisik']);
+            foreach ($dataSifatFisik as $key => $sub) {
+                if ($sub['bobot_sub_kriteria'] == 5 && ($fisik >= 800)) {
+                    $fisikId = $sub['id_sub_kriteria'];
+                } else if ($sub['bobot_sub_kriteria'] == 4 && ($fisik >= 600 && $fisik < 800)) {
+                    $fisikId = $sub['id_sub_kriteria'];
+                } else if ($sub['bobot_sub_kriteria'] == 3 && ($fisik >= 400 && $fisik < 600)) {
+                    $fisikId = $sub['id_sub_kriteria'];
+                } else if ($sub['bobot_sub_kriteria'] == 2 && ($fisik >= 200 && $fisik < 400)) {
+                    $fisikId = $sub['id_sub_kriteria'];
+                } else if ($sub['bobot_sub_kriteria'] == 1 && ($fisik < 200)) {
+                    $fisikId = $sub['id_sub_kriteria'];
+                }
+            }
+
+            // mekanik
+            $mekanik = htmlspecialchars($_POST['sifat_mekanik']);
+            // $mekanik_cek = htmlspecialchars($_POST['sifat_mekanik']);
+            foreach ($dataSifatMekanik as $key => $sub) {
+                if ($sub['bobot_sub_kriteria'] == 5 && ($mekanik >= 75)) {
+                    $mekanikId = $sub['id_sub_kriteria'];
+                } else if ($sub['bobot_sub_kriteria'] == 4 && ($mekanik >= 60 && $mekanik < 75)) {
+                    $mekanikId = $sub['id_sub_kriteria'];
+                } else if ($sub['bobot_sub_kriteria'] == 3 && ($mekanik >= 45 && $mekanik < 60)) {
+                    $mekanikId = $sub['id_sub_kriteria'];
+                } else if ($sub['bobot_sub_kriteria'] == 2 && ($mekanik >= 30 && $mekanik < 45)) {
+                    $mekanikId = $sub['id_sub_kriteria'];
+                } else if ($sub['bobot_sub_kriteria'] == 1 && ($mekanik < 30)) {
+                    $mekanikId = $sub['id_sub_kriteria'];
+                }
+            }
+
+            // keawetan
+            $keawetan = htmlspecialchars($_POST['kelas_keawetan']);
+            // $keawetan_cek = htmlspecialchars($_POST['kelas_keawetan']);
+            foreach ($dataSubKelasKeawetan as $key => $sub) {
+                if ($sub['bobot_sub_kriteria'] == 5 && ($keawetan >= 20)) {
+                    $keawetanId = $sub['id_sub_kriteria'];
+                } else if ($sub['bobot_sub_kriteria'] == 4 && ($keawetan >= 15 && $keawetan < 20)) {
+                    $keawetanId = $sub['id_sub_kriteria'];
+                } else if ($sub['bobot_sub_kriteria'] == 3 && ($keawetan >= 10 && $keawetan < 15)) {
+                    $keawetanId = $sub['id_sub_kriteria'];
+                } else if ($sub['bobot_sub_kriteria'] == 2 && ($keawetan >= 5 && $keawetan < 10)) {
+                    $keawetanId = $sub['id_sub_kriteria'];
+                } else if ($sub['bobot_sub_kriteria'] == 1 && ($keawetan < 5)) {
+                    $keawetanId = $sub['id_sub_kriteria'];
+                }
+            }
+
             // umur
             $umur = htmlspecialchars($_POST['umur']);
-            $umur_cek = htmlspecialchars($_POST['umur']);
+            // $umur_cek = htmlspecialchars($_POST['umur']);
             foreach ($dataSubUmurKayu as $key => $sub) {
-                if ($sub['bobot_sub_kriteria'] == 5 && ($umur_cek >= 60)) {
+                if ($sub['bobot_sub_kriteria'] == 5 && ($umur >= 40)) {
                     $umurId = $sub['id_sub_kriteria'];
-                } else if ($sub['bobot_sub_kriteria'] == 4 && ($umur_cek >= 40 && $umur_cek < 60)) {
+                } else if ($sub['bobot_sub_kriteria'] == 4 && ($umur >= 30 && $umur < 40)) {
                     $umurId = $sub['id_sub_kriteria'];
-                } else if ($sub['bobot_sub_kriteria'] == 3 && ($umur_cek >= 30 && $umur_cek < 40)) {
+                } else if ($sub['bobot_sub_kriteria'] == 3 && ($umur >= 25 && $umur < 30)) {
                     $umurId = $sub['id_sub_kriteria'];
-                } else if ($sub['bobot_sub_kriteria'] == 2 && ($umur_cek >= 25 && $umur_cek < 30)) {
+                } else if ($sub['bobot_sub_kriteria'] == 2 && ($umur >= 15 && $umur < 25)) {
                     $umurId = $sub['id_sub_kriteria'];
-                } else if ($sub['bobot_sub_kriteria'] == 1 && ($umur_cek < 25)) {
+                } else if ($sub['bobot_sub_kriteria'] == 1 && ($umur < 15)) {
                     $umurId = $sub['id_sub_kriteria'];
                 }
             }
@@ -74,25 +130,26 @@ if (isset($_POST['simpan'])) {
             // harga
             $harga = htmlspecialchars($_POST['harga']);
             foreach ($dataSubHargaKayu as $key => $sub) {
-                if ($sub['bobot_sub_kriteria'] == 5 && ($harga >= 5000000)) {
+                if ($sub['bobot_sub_kriteria'] == 5 && ($harga >= 6000000)) {
                     $hargaId = $sub['id_sub_kriteria'];
-                } else if ($sub['bobot_sub_kriteria'] == 4 && ($harga >= 3500000 && $harga < 5000000)) {
+                } else if ($sub['bobot_sub_kriteria'] == 4 && ($harga >= 4500000 && $harga < 6000000)) {
                     $hargaId = $sub['id_sub_kriteria'];
-                } else if ($sub['bobot_sub_kriteria'] == 3 && ($harga >= 2000000 && $harga < 3500000)) {
+                } else if ($sub['bobot_sub_kriteria'] == 3 && ($harga >= 2500000 && $harga < 4500000)) {
                     $hargaId = $sub['id_sub_kriteria'];
-                } else if ($sub['bobot_sub_kriteria'] == 2 && ($harga >= 600000 && $harga < 2000000)) {
+                } else if ($sub['bobot_sub_kriteria'] == 2 && ($harga >= 500000 && $harga < 2500000)) {
                     $hargaId = $sub['id_sub_kriteria'];
-                } else if ($sub['bobot_sub_kriteria'] == 1 && ($harga < 600000)) {
+                } else if ($sub['bobot_sub_kriteria'] == 1 && ($harga < 500000)) {
                     $hargaId = $sub['id_sub_kriteria'];
                 }
             }
 
             $dataAlt = [
                 'nama_alternatif' => $namaAlternatif,
-                'sifat_mekanik' => $sifat_mekanik,
+                'fisik' => $fisik,
+                'mekanik' => $mekanik,
+                'keawetan' => $keawetan,
                 'harga' => $harga,
                 'umur' => $umur,
-                'kelas_keawetan' => $kelas_keawetan,
                 'gambar' => $namaFile,
                 'nama_mebel' => $nama_mebel,
                 'latitude' => $latitude,
@@ -100,10 +157,11 @@ if (isset($_POST['simpan'])) {
             ];
 
             $dataSubKriteria = [
-                'C1' => $sifat_mekanik,
-                'C2' => $kelas_keawetan,
-                'C3' => $umurId,
-                'C4' => $hargaId
+                'C1' => $fisikId,
+                'C2' => $mekanikId,
+                'C3' => $keawetanId,
+                'C4' => $umurId,
+                'C5' => $hargaId
             ];
 
             $getDataAlternatif->tambahAlternatif($dataAlt, $dataSubKriteria);
@@ -150,8 +208,8 @@ if (isset($_POST['edit'])) {
         if (move_uploaded_file($lokasiSementara, $targetFilePath)) {
             $id_alternatif = htmlspecialchars($_POST['id_alternatif']);
             $namaAlternatif = htmlspecialchars($_POST['nama_alternatif']);
-            $sifat_mekanik = htmlspecialchars($_POST['sifat_mekanik']);
-            $kelas_keawetan = htmlspecialchars($_POST['kelas_keawetan']);
+            // $sifat_mekanik = htmlspecialchars($_POST['sifat_mekanik']);
+            // $kelas_keawetan = htmlspecialchars($_POST['kelas_keawetan']);
             $nama_mebel = htmlspecialchars($_POST['nama_mebel']);
             $latitude = htmlspecialchars($_POST['latitude']);
             $longitude = htmlspecialchars($_POST['longitude']);
@@ -165,19 +223,70 @@ if (isset($_POST['edit'])) {
             }
 
 
+            // fisik
+            // $fisik = htmlspecialchars($_POST['fisik']);
+            $fisik = htmlspecialchars($_POST['sifat_fisik']);
+            foreach ($dataSifatFisik as $key => $sub) {
+                if ($sub['bobot_sub_kriteria'] == 5 && ($fisik >= 800)) {
+                    $fisikId = $sub['id_sub_kriteria'];
+                } else if ($sub['bobot_sub_kriteria'] == 4 && ($fisik >= 600 && $fisik < 800)) {
+                    $fisikId = $sub['id_sub_kriteria'];
+                } else if ($sub['bobot_sub_kriteria'] == 3 && ($fisik >= 400 && $fisik < 600)) {
+                    $fisikId = $sub['id_sub_kriteria'];
+                } else if ($sub['bobot_sub_kriteria'] == 2 && ($fisik >= 200 && $fisik < 400)) {
+                    $fisikId = $sub['id_sub_kriteria'];
+                } else if ($sub['bobot_sub_kriteria'] == 1 && ($fisik < 200)) {
+                    $fisikId = $sub['id_sub_kriteria'];
+                }
+            }
+
+            // mekanik
+            // $mekanik = htmlspecialchars($_POST['mekanik']);
+            $mekanik = htmlspecialchars($_POST['sifat_mekanik']);
+            foreach ($dataSifatMekanik as $key => $sub) {
+                if ($sub['bobot_sub_kriteria'] == 5 && ($mekanik >= 75)) {
+                    $mekanikId = $sub['id_sub_kriteria'];
+                } else if ($sub['bobot_sub_kriteria'] == 4 && ($mekanik >= 60 && $mekanik < 75)) {
+                    $mekanikId = $sub['id_sub_kriteria'];
+                } else if ($sub['bobot_sub_kriteria'] == 3 && ($mekanik >= 45 && $mekanik < 60)) {
+                    $mekanikId = $sub['id_sub_kriteria'];
+                } else if ($sub['bobot_sub_kriteria'] == 2 && ($mekanik >= 30 && $mekanik < 45)) {
+                    $mekanikId = $sub['id_sub_kriteria'];
+                } else if ($sub['bobot_sub_kriteria'] == 1 && ($mekanik < 30)) {
+                    $mekanikId = $sub['id_sub_kriteria'];
+                }
+            }
+
+            // keawetan
+            // $keawetan = htmlspecialchars($_POST['keawetan']);
+            $keawetan = htmlspecialchars($_POST['kelas_keawetan']);
+            foreach ($dataSubKelasKeawetan as $key => $sub) {
+                if ($sub['bobot_sub_kriteria'] == 5 && ($keawetan >= 20)) {
+                    $keawetanId = $sub['id_sub_kriteria'];
+                } else if ($sub['bobot_sub_kriteria'] == 4 && ($keawetan >= 15 && $keawetan < 20)) {
+                    $keawetanId = $sub['id_sub_kriteria'];
+                } else if ($sub['bobot_sub_kriteria'] == 3 && ($keawetan >= 10 && $keawetan < 15)) {
+                    $keawetanId = $sub['id_sub_kriteria'];
+                } else if ($sub['bobot_sub_kriteria'] == 2 && ($keawetan >= 5 && $keawetan < 10)) {
+                    $keawetanId = $sub['id_sub_kriteria'];
+                } else if ($sub['bobot_sub_kriteria'] == 1 && ($keawetan < 5)) {
+                    $keawetanId = $sub['id_sub_kriteria'];
+                }
+            }
+
             // umur
             $umur = htmlspecialchars($_POST['umur']);
-            $umur_cek = htmlspecialchars($_POST['umur']);
+            // $umur_cek = htmlspecialchars($_POST['umur']);
             foreach ($dataSubUmurKayu as $key => $sub) {
-                if ($sub['bobot_sub_kriteria'] == 5 && ($umur_cek >= 60)) {
+                if ($sub['bobot_sub_kriteria'] == 5 && ($umur >= 40)) {
                     $umurId = $sub['id_sub_kriteria'];
-                } else if ($sub['bobot_sub_kriteria'] == 4 && ($umur_cek >= 40 && $umur_cek < 60)) {
+                } else if ($sub['bobot_sub_kriteria'] == 4 && ($umur >= 30 && $umur < 40)) {
                     $umurId = $sub['id_sub_kriteria'];
-                } else if ($sub['bobot_sub_kriteria'] == 3 && ($umur_cek >= 30 && $umur_cek < 40)) {
+                } else if ($sub['bobot_sub_kriteria'] == 3 && ($umur >= 25 && $umur < 30)) {
                     $umurId = $sub['id_sub_kriteria'];
-                } else if ($sub['bobot_sub_kriteria'] == 2 && ($umur_cek >= 25 && $umur_cek < 30)) {
+                } else if ($sub['bobot_sub_kriteria'] == 2 && ($umur >= 15 && $umur < 25)) {
                     $umurId = $sub['id_sub_kriteria'];
-                } else if ($sub['bobot_sub_kriteria'] == 1 && ($umur_cek < 25)) {
+                } else if ($sub['bobot_sub_kriteria'] == 1 && ($umur < 15)) {
                     $umurId = $sub['id_sub_kriteria'];
                 }
             }
@@ -185,15 +294,15 @@ if (isset($_POST['edit'])) {
             // harga
             $harga = htmlspecialchars($_POST['harga']);
             foreach ($dataSubHargaKayu as $key => $sub) {
-                if ($sub['bobot_sub_kriteria'] == 5 && ($harga >= 5000000)) {
+                if ($sub['bobot_sub_kriteria'] == 5 && ($harga >= 6000000)) {
                     $hargaId = $sub['id_sub_kriteria'];
-                } else if ($sub['bobot_sub_kriteria'] == 4 && ($harga >= 3500000 && $harga < 5000000)) {
+                } else if ($sub['bobot_sub_kriteria'] == 4 && ($harga >= 4500000 && $harga < 6000000)) {
                     $hargaId = $sub['id_sub_kriteria'];
-                } else if ($sub['bobot_sub_kriteria'] == 3 && ($harga >= 2000000 && $harga < 3500000)) {
+                } else if ($sub['bobot_sub_kriteria'] == 3 && ($harga >= 2500000 && $harga < 4500000)) {
                     $hargaId = $sub['id_sub_kriteria'];
-                } else if ($sub['bobot_sub_kriteria'] == 2 && ($harga >= 600000 && $harga < 2000000)) {
+                } else if ($sub['bobot_sub_kriteria'] == 2 && ($harga >= 500000 && $harga < 2500000)) {
                     $hargaId = $sub['id_sub_kriteria'];
-                } else if ($sub['bobot_sub_kriteria'] == 1 && ($harga < 600000)) {
+                } else if ($sub['bobot_sub_kriteria'] == 1 && ($harga < 500000)) {
                     $hargaId = $sub['id_sub_kriteria'];
                 }
             }
@@ -201,17 +310,18 @@ if (isset($_POST['edit'])) {
             $dataAlt = [
                 'id_alternatif' => $id_alternatif,
                 'nama_alternatif' => $namaAlternatif,
-                'sifat_mekanik' => $sifat_mekanik,
+                'fisik' => $fisik,
+                'mekanik' => $mekanik,
+                'keawetan' => $keawetan,
                 'harga' => $harga,
                 'umur' => $umur,
-                'kelas_keawetan' => $kelas_keawetan,
                 'gambar' => $namaFile,
                 'nama_mebel' => $nama_mebel,
                 'latitude' => $latitude,
                 'longitude' => $longitude
             ];
 
-            $dataSubKriteria = [$sifat_mekanik, $kelas_keawetan, $umurId, $hargaId];
+            $dataSubKriteria = [$fisikId, $mekanikId, $keawetanId, $umurId, $hargaId];
             $getDataAlternatif->editAlternatif($dataAlt, $dataSubKriteria);
         } else {
             return $_SESSION['error'] = 'Tidak ada data yang dikirim!';
@@ -219,26 +329,77 @@ if (isset($_POST['edit'])) {
     } else {
         $id_alternatif = htmlspecialchars($_POST['id_alternatif']);
         $namaAlternatif = htmlspecialchars($_POST['nama_alternatif']);
-        $sifat_mekanik = htmlspecialchars($_POST['sifat_mekanik']);
-        $kelas_keawetan = htmlspecialchars($_POST['kelas_keawetan']);
+        // $sifat_mekanik = htmlspecialchars($_POST['sifat_mekanik']);
+        // $kelas_keawetan = htmlspecialchars($_POST['kelas_keawetan']);
         $namaFile = htmlspecialchars($_POST['gambar_lama']);
         $nama_mebel = htmlspecialchars($_POST['nama_mebel']);
         $latitude = htmlspecialchars($_POST['latitude']);
         $longitude = htmlspecialchars($_POST['longitude']);
 
+        // fisik
+        // $fisik = htmlspecialchars($_POST['fisik']);
+        $fisik = htmlspecialchars($_POST['sifat_fisik']);
+        foreach ($dataSifatFisik as $key => $sub) {
+            if ($sub['bobot_sub_kriteria'] == 5 && ($fisik >= 800)) {
+                $fisikId = $sub['id_sub_kriteria'];
+            } else if ($sub['bobot_sub_kriteria'] == 4 && ($fisik >= 600 && $fisik < 800)) {
+                $fisikId = $sub['id_sub_kriteria'];
+            } else if ($sub['bobot_sub_kriteria'] == 3 && ($fisik >= 400 && $fisik < 600)) {
+                $fisikId = $sub['id_sub_kriteria'];
+            } else if ($sub['bobot_sub_kriteria'] == 2 && ($fisik >= 200 && $fisik < 400)) {
+                $fisikId = $sub['id_sub_kriteria'];
+            } else if ($sub['bobot_sub_kriteria'] == 1 && ($fisik < 200)) {
+                $fisikId = $sub['id_sub_kriteria'];
+            }
+        }
+
+        // mekanik
+        // $mekanik = htmlspecialchars($_POST['mekanik']);
+        $mekanik = htmlspecialchars($_POST['sifat_mekanik']);
+        foreach ($dataSifatMekanik as $key => $sub) {
+            if ($sub['bobot_sub_kriteria'] == 5 && ($mekanik >= 75)) {
+                $mekanikId = $sub['id_sub_kriteria'];
+            } else if ($sub['bobot_sub_kriteria'] == 4 && ($mekanik >= 60 && $mekanik < 75)) {
+                $mekanikId = $sub['id_sub_kriteria'];
+            } else if ($sub['bobot_sub_kriteria'] == 3 && ($mekanik >= 45 && $mekanik < 60)) {
+                $mekanikId = $sub['id_sub_kriteria'];
+            } else if ($sub['bobot_sub_kriteria'] == 2 && ($mekanik >= 30 && $mekanik < 45)) {
+                $mekanikId = $sub['id_sub_kriteria'];
+            } else if ($sub['bobot_sub_kriteria'] == 1 && ($mekanik < 30)) {
+                $mekanikId = $sub['id_sub_kriteria'];
+            }
+        }
+
+        // keawetan
+        // $keawetan = htmlspecialchars($_POST['keawetan']);
+        $keawetan = htmlspecialchars($_POST['kelas_keawetan']);
+        foreach ($dataSubKelasKeawetan as $key => $sub) {
+            if ($sub['bobot_sub_kriteria'] == 5 && ($keawetan >= 20)) {
+                $keawetanId = $sub['id_sub_kriteria'];
+            } else if ($sub['bobot_sub_kriteria'] == 4 && ($keawetan >= 15 && $keawetan < 20)) {
+                $keawetanId = $sub['id_sub_kriteria'];
+            } else if ($sub['bobot_sub_kriteria'] == 3 && ($keawetan >= 10 && $keawetan < 15)) {
+                $keawetanId = $sub['id_sub_kriteria'];
+            } else if ($sub['bobot_sub_kriteria'] == 2 && ($keawetan >= 5 && $keawetan < 10)) {
+                $keawetanId = $sub['id_sub_kriteria'];
+            } else if ($sub['bobot_sub_kriteria'] == 1 && ($keawetan < 5)) {
+                $keawetanId = $sub['id_sub_kriteria'];
+            }
+        }
+
         // umur
+        // $umur = htmlspecialchars($_POST['umur']);
         $umur = htmlspecialchars($_POST['umur']);
-        $umur_cek = htmlspecialchars($_POST['umur']);
         foreach ($dataSubUmurKayu as $key => $sub) {
-            if ($sub['bobot_sub_kriteria'] == 5 && ($umur_cek >= 60)) {
+            if ($sub['bobot_sub_kriteria'] == 5 && ($umur >= 40)) {
                 $umurId = $sub['id_sub_kriteria'];
-            } else if ($sub['bobot_sub_kriteria'] == 4 && ($umur_cek >= 40 && $umur_cek < 60)) {
+            } else if ($sub['bobot_sub_kriteria'] == 4 && ($umur >= 30 && $umur < 40)) {
                 $umurId = $sub['id_sub_kriteria'];
-            } else if ($sub['bobot_sub_kriteria'] == 3 && ($umur_cek >= 30 && $umur_cek < 40)) {
+            } else if ($sub['bobot_sub_kriteria'] == 3 && ($umur >= 25 && $umur < 30)) {
                 $umurId = $sub['id_sub_kriteria'];
-            } else if ($sub['bobot_sub_kriteria'] == 2 && ($umur_cek >= 25 && $umur_cek < 30)) {
+            } else if ($sub['bobot_sub_kriteria'] == 2 && ($umur >= 15 && $umur < 25)) {
                 $umurId = $sub['id_sub_kriteria'];
-            } else if ($sub['bobot_sub_kriteria'] == 1 && ($umur_cek < 25)) {
+            } else if ($sub['bobot_sub_kriteria'] == 1 && ($umur < 15)) {
                 $umurId = $sub['id_sub_kriteria'];
             }
         }
@@ -246,15 +407,15 @@ if (isset($_POST['edit'])) {
         // harga
         $harga = htmlspecialchars($_POST['harga']);
         foreach ($dataSubHargaKayu as $key => $sub) {
-            if ($sub['bobot_sub_kriteria'] == 5 && ($harga >= 5000000)) {
+            if ($sub['bobot_sub_kriteria'] == 5 && ($harga >= 6000000)) {
                 $hargaId = $sub['id_sub_kriteria'];
-            } else if ($sub['bobot_sub_kriteria'] == 4 && ($harga >= 3500000 && $harga < 5000000)) {
+            } else if ($sub['bobot_sub_kriteria'] == 4 && ($harga >= 4500000 && $harga < 6000000)) {
                 $hargaId = $sub['id_sub_kriteria'];
-            } else if ($sub['bobot_sub_kriteria'] == 3 && ($harga >= 2000000 && $harga < 3500000)) {
+            } else if ($sub['bobot_sub_kriteria'] == 3 && ($harga >= 2500000 && $harga < 4500000)) {
                 $hargaId = $sub['id_sub_kriteria'];
-            } else if ($sub['bobot_sub_kriteria'] == 2 && ($harga >= 600000 && $harga < 2000000)) {
+            } else if ($sub['bobot_sub_kriteria'] == 2 && ($harga >= 500000 && $harga < 2500000)) {
                 $hargaId = $sub['id_sub_kriteria'];
-            } else if ($sub['bobot_sub_kriteria'] == 1 && ($harga < 600000)) {
+            } else if ($sub['bobot_sub_kriteria'] == 1 && ($harga < 500000)) {
                 $hargaId = $sub['id_sub_kriteria'];
             }
         }
@@ -262,17 +423,18 @@ if (isset($_POST['edit'])) {
         $dataAlt = [
             'id_alternatif' => $id_alternatif,
             'nama_alternatif' => $namaAlternatif,
-            'sifat_mekanik' => $sifat_mekanik,
+            'fisik' => $fisik,
+            'mekanik' => $mekanik,
+            'keawetan' => $keawetan,
             'harga' => $harga,
             'umur' => $umur,
-            'kelas_keawetan' => $kelas_keawetan,
             'gambar' => $namaFile,
             'nama_mebel' => $nama_mebel,
             'latitude' => $latitude,
             'longitude' => $longitude
         ];
 
-        $dataSubKriteria = [$sifat_mekanik, $kelas_keawetan, $umurId, $hargaId];
+        $dataSubKriteria = [$fisikId, $mekanikId, $keawetanId, $umurId, $hargaId];
         $getDataAlternatif->editAlternatif($dataAlt, $dataSubKriteria);
     }
 }
@@ -342,7 +504,7 @@ Swal.fire({
                                 <input type="text" name="nama_alternatif" class="form-control"
                                     id="exampleFormControlInput1" required placeholder="Nama kayu" />
                             </div>
-                            <div class="mb-3 mt-3">
+                            <!-- <div class="mb-3 mt-3">
                                 <label for="sifat_mekanik" class="form-label">Sifat Mekanik</label>
                                 <select name="sifat_mekanik" id="sifat_mekanik" class="form-control">
                                     <option value="">-- Pilih --</option>
@@ -361,6 +523,31 @@ Swal.fire({
                                         <?= $kelas_keawetan['nama_sub_kriteria']; ?></option>
                                     <?php endforeach; ?>
                                 </select>
+                            </div> -->
+                            <div class="mb-3 mt-3">
+                                <label for="fisik" class="form-label">Sifat Fisik</label>
+                                <input type="number" name="sifat_fisik" required class="form-control" id="fisik"
+                                    placeholder="Sifat fisik dalam kg/m^3" step="0.01" min="0.00" />
+                                <small style="font-size: 8pt"><i>Cukup masukkan angka saja. Cth 100 Kg/m^2,
+                                        cukup masukkan
+                                        angka 100.</i></small>
+                            </div>
+                            <div class="mb-3 mt-3">
+                                <label for="sifat_mekanik" class="form-label">Sifat Mekanik</label>
+                                <input type="number" name="sifat_mekanik" required class="form-control"
+                                    id="sifat_mekanik" placeholder="Sifat mekanik dalam MPa" step="0.01" min="0.00" />
+                                <small style="font-size: 8pt"><i>Cukup masukkan angka saja. Cth 45 MPa,
+                                        cukup masukkan
+                                        angka 45.</i></small>
+                            </div>
+                            <div class="mb-3 mt-3">
+                                <label for="kelas_keawetan" class="form-label">Kelas Keawetan</label>
+                                <input type="number" name="kelas_keawetan" required class="form-control"
+                                    id="kelas_keawetan" placeholder="Kelas keawetan dalam tahun" step="0.01"
+                                    min="0.00" />
+                                <small style="font-size: 8pt"><i>Cukup masukkan angka saja. Cth 2 tahun,
+                                        cukup masukkan
+                                        angka 2.</i></small>
                             </div>
                             <div class="mb-3 mt-3">
                                 <label for="umur" class="form-label">Umur Kayu</label>
@@ -417,6 +604,7 @@ Swal.fire({
                                         <th scope="col">No</th>
                                         <th scope="col">Gambar</th>
                                         <th scope="col">Nama Alternatif</th>
+                                        <th scope="col">Sifat Fisik</th>
                                         <th scope="col">Sifat Mekanik</th>
                                         <th scope="col">Kelas Keawetan</th>
                                         <th scope="col">Umur</th>
@@ -437,8 +625,9 @@ Swal.fire({
                                                     alt=""></a>
                                         </td>
                                         <td><?= $alternatif['nama_alternatif']; ?></td>
-                                        <td><?= $alternatif['nama_C1']; ?></td>
-                                        <td><?= $alternatif['nama_C2']; ?></td>
+                                        <td><?= $alternatif['fisik']; ?> kg/m^3</td>
+                                        <td><?= $alternatif['mekanik']; ?> MPa</td>
+                                        <td><?= $alternatif['keawetan']; ?> Tahun</td>
                                         <td><?= $alternatif['umur']; ?> Tahun</td>
                                         <td><?= $alternatif['harga']; ?></td>
                                         <td><?= $alternatif['nama_mebel']; ?></td>
@@ -491,7 +680,7 @@ Swal.fire({
                                 placeholder="Nama Alternatif" />
                         </div>
                     </div>
-                    <div class="mb-3 mt-3">
+                    <!-- <div class="mb-3 mt-3">
                         <label for="sifat_mekanik" class="form-label">Sifat Mekanik</label>
                         <select name="sifat_mekanik" id="sifat_mekanik" class="form-control">
                             <option value="">-- Pilih --</option>
@@ -514,6 +703,33 @@ Swal.fire({
                                 <?= $kelas_keawetan['nama_sub_kriteria']; ?></option>
                             <?php endforeach; ?>
                         </select>
+                    </div> -->
+                    <div class="mb-3 mt-3">
+                        <label for="fisik" class="form-label">Sifat Fisik</label>
+                        <input type="number" value="<?= $alternatif['fisik']; ?>" name="sifat_fisik" required
+                            class="form-control" id="fisik" placeholder="Sifat fisik dalam kg/m^3" step="0.01"
+                            min="0.00" />
+                        <small style="font-size: 8pt"><i>Cukup masukkan angka saja. Cth 100 Kg/m^2,
+                                cukup masukkan
+                                angka 100.</i></small>
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <label for="sifat_mekanik" class="form-label">Sifat Mekanik</label>
+                        <input type="number" value="<?= $alternatif['mekanik']; ?>" name="sifat_mekanik" required
+                            class="form-control" id="sifat_mekanik" placeholder="Sifat mekanik dalam MPa" step="0.01"
+                            min="0.00" />
+                        <small style="font-size: 8pt"><i>Cukup masukkan angka saja. Cth 45 MPa,
+                                cukup masukkan
+                                angka 45.</i></small>
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <label for="kelas_keawetan" class="form-label">Kelas Keawetan</label>
+                        <input type="number" value="<?= $alternatif['keawetan']; ?>" name="kelas_keawetan" required
+                            class="form-control" id="kelas_keawetan" placeholder="Kelas keawetan dalam tahun"
+                            step="0.01" min="0.00" />
+                        <small style="font-size: 8pt"><i>Cukup masukkan angka saja. Cth 2 tahun,
+                                cukup masukkan
+                                angka 2.</i></small>
                     </div>
                     <div class="mb-3 mt-3">
                         <label for="umur" class="form-label">Umur Kayu</label>

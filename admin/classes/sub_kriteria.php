@@ -18,21 +18,25 @@ class Sub_Kriteria
     {
         return $this->db->query("SELECT * FROM `kriteria`");
     }
-    public function getSubKriteriaSifatMekanik()
+    public function getSubKriteriaSifatFisik()
     {
         return $this->db->query("SELECT * FROM `sub_kriteria` WHERE f_id_kriteria='C1'");
     }
-    public function getSubKriteriaKelasKeawetan()
+    public function getSubKriteriaSifatMekanik()
     {
         return $this->db->query("SELECT * FROM `sub_kriteria` WHERE f_id_kriteria='C2'");
     }
-    public function getSubKriteriaUmurKayu()
+    public function getSubKriteriaKelasKeawetan()
     {
         return $this->db->query("SELECT * FROM `sub_kriteria` WHERE f_id_kriteria='C3'");
     }
-    public function getSubKriteriaHargaKayu()
+    public function getSubKriteriaUmurKayu()
     {
         return $this->db->query("SELECT * FROM `sub_kriteria` WHERE f_id_kriteria='C4'");
+    }
+    public function getSubKriteriaHargaKayu()
+    {
+        return $this->db->query("SELECT * FROM `sub_kriteria` WHERE f_id_kriteria='C5'");
     }
     public function tambahSubKriteria($dataSubKiteria)
     {
