@@ -503,9 +503,18 @@ document.addEventListener('DOMContentLoaded', function() {
                                         </td>
                                         <td>
                                             <div class="mb-3">
-                                                <input class="form-control" type="number" placeholder="0"
+
+                                                <select required class="form-select" name="bobot<?php echo $k; ?>"
+                                                    aria-label="Default select example">
+                                                    <option value="">-- Pilih --</option>
+                                                    <?php foreach ($array_skala as $key => $value) :?>
+                                                    <option value="<?=$value['nilai'];?>"><?=$value['keterangan'];?>
+                                                    </option>
+                                                    <?php endforeach;?>
+                                                </select>
+                                                <!-- <input class="form-control" type="number" placeholder="0"
                                                     name="bobot<?php echo $k; ?>" value="<?php echo $nilai ?>" max="9"
-                                                    required>
+                                                    required> -->
                                             </div>
                                         </td>
                                     </tr>
